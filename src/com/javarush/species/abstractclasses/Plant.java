@@ -1,8 +1,11 @@
 package com.javarush.species.abstractclasses;
 
-public class Plant extends Species {
-    int weight;
-    public Plant(int[][] position) {
-        super(position);
+public abstract class Plant extends Entity {
+    private int weight;
+    private int maxNumberOnPosition;
+
+    public Plant(int weight, int maxNumberOnPosition) {
+        this.weight = weight;
+        this.maxNumberOnPosition = maxNumberOnPosition;
     }
 }

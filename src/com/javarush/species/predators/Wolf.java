@@ -1,9 +1,11 @@
 package com.javarush.species.predators;
 
-import com.javarush.species.abstractclasses.Predators;
+import com.javarush.annotations.Predators;
+import com.javarush.species.abstractclasses.Animal;
 
-public class Wolf extends Predators {
-    public Wolf(int x, int y) {
-        super(x, y);
+@Predators
+public class Wolf extends Animal {
+    public Wolf(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation) {
+        super(weight, maxNumberOnPosition, maxTravelSpeed, kgForFullSaturation);
     }
 }

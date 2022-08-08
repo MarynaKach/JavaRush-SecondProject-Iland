@@ -1,13 +1,11 @@
 package com.javarush.species.herbivores;
 
-import com.javarush.species.abstractclasses.Herbivores;
+import com.javarush.annotations.Herbivores;
+import com.javarush.species.abstractclasses.Animal;
 
-public class Goat extends Herbivores {
-    public Goat(int[][] position) {
-        super(position);
-    }
-
-    public Goat(int x, int y) {
-        super(x, y);
+@Herbivores
+public class Goat extends Animal {
+    public Goat(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation) {
+        super(weight, maxNumberOnPosition, maxTravelSpeed, kgForFullSaturation);
     }
 }

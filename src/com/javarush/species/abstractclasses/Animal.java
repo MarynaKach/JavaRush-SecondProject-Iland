@@ -1,16 +1,17 @@
 package com.javarush.species.abstractclasses;
 
-public class Animal extends Species {
-    int weight;
-    int movingSpeed;
-    int kgForSaturation;
+public abstract class Animal extends Entity {
+    private double weight;
+    private int maxNumberOnPosition;
+    private int maxTravelSpeed;
+    private double kgForFullSaturation;
 
-    protected Animal(int[][] position) {
-        super(position);
-    }
+    public Animal(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation) {
+        this.weight = weight;
+        this.maxNumberOnPosition = maxNumberOnPosition;
+        this.maxTravelSpeed = maxTravelSpeed;
+        this.kgForFullSaturation = kgForFullSaturation;
 
-    protected Animal(int x, int y) {
-        super(new int[][]{{x, y}});
     }
 
     public void chooseDirection() {

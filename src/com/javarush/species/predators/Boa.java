@@ -1,9 +1,12 @@
 package com.javarush.species.predators;
 
-import com.javarush.species.abstractclasses.Predators;
+import com.javarush.annotations.Predators;
+import com.javarush.species.abstractclasses.Animal;
 
-public class Boa extends Predators {
-    public Boa(int x, int y) {
-        super(x, y);
+@Predators
+public class Boa extends Animal {
+
+    public Boa(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation) {
+        super(weight, maxNumberOnPosition, maxTravelSpeed, kgForFullSaturation);
     }
 }

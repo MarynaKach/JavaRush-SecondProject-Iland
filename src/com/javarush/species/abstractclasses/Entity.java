@@ -1,5 +1,4 @@
 package com.javarush.species.abstractclasses;
 
-public class Predators {
-
+public abstract class Entity {
 }

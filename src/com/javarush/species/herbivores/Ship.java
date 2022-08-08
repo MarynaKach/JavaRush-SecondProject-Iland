@@ -1,9 +1,11 @@
 package com.javarush.species.herbivores;
 
-import com.javarush.species.abstractclasses.Herbivores;
+import com.javarush.annotations.Herbivores;
+import com.javarush.species.abstractclasses.Animal;
 
-public class Ship extends Herbivores {
-    public Ship(int x, int y) {
-        super(x, y);
+@Herbivores
+public class Ship extends Animal {
+    public Ship(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation) {
+        super(weight, maxNumberOnPosition, maxTravelSpeed, kgForFullSaturation);
     }
 }
