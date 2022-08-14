@@ -7,53 +7,65 @@ import com.javarush.main.game.Island;
 import com.javarush.main.species.abstractclasses.Animal;
 import com.javarush.main.species.abstractclasses.Entity;
 
-import java.lang.reflect.Field;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AnimalActions {
     EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
-    //IslandInitialization islandInitialization = new IslandInitialization();
+    EntitiesProduction entitiesProduction = new EntitiesProduction();
+    DirectionsOfMoving directionOfMoving;
+    Actions actions;
     Object[][] island = Island.getInstance();
     int length = Island.getLength();
     int width = Island.getWidth();
 
     public void islandAnimalIteration() {
-        for (int row = 1; row < island.length - 1; row++) {
-            for (int columns = 1; columns < island[row].length - 1; columns++) {
-                List<? extends Entity> listOfEntitiesOnPosition = (List<? extends Entity>) island[row][columns];
-                List<? extends Entity> copyListOfEntitiesOnPosition = listOfEntitiesOnPosition;
-                for (Entity animal : copyListOfEntitiesOnPosition) {
-                    String packageName = animal.getClass().getPackageName();
-                    if (!(packageName.contains("plant")) && animal != null) {
-                        Animal animalTemp = (Animal) animal;
-                        int travelSpeed = animalTemp.getMaxTravelSpeed();
-                        double kgForFullSaturation = animalTemp.getKgForFullSaturation();
-                        boolean isActionDone = animalTemp.isActionDone();
-                        chooseAction(animal, travelSpeed, kgForFullSaturation, row, columns, isActionDone);
+        for (int row = 1; row < island.length; row++) {
+            for (int columns = 1; columns < island[row].length; columns++) {
+                List<Entity> listOfEntitiesOnPosition = (List<Entity>) island[row][columns];
+                for (int i = 0; i < listOfEntitiesOnPosition.size(); i++) {
+                    List<Entity> copyListOfEntitiesOnPosition = listOfEntitiesOnPosition;
+                    Entity entity  = (Entity) copyListOfEntitiesOnPosition.get(i);
+                    String packageName = entity.getClass().getPackageName();
+                    if (!(packageName.contains("plant")) && entity != null) {
+                        Animal animal = (Animal) entity;
+                        boolean isActionDone = animal.isActionDone();
+                        if (isActionDone) {
+
+                        } else {
+                            chooseAction(copyListOfEntitiesOnPosition, animal, row, columns);
+                            i--;
+                        }
                     }
+                    listOfEntitiesOnPosition = copyListOfEntitiesOnPosition;
                 }
             }
         }
     }
 
-    public void chooseAction(Entity animal, int travelSpeed, double kgForFullSaturation, int row, int columns, boolean isActionDone) {
-        Actions actions = enumRandomChoice.chooseRandomEnum(Actions.class);
+    public void chooseAction(List<Entity> copyList, Entity animal, int row, int columns) {
+        /*boolean isActionDone = ((Animal)animal).isActionDone();
+        if (isActionDone == true) {
+            return;
+        }*/
+        actions = enumRandomChoice.chooseRandomEnum(Actions.class);
         switch (actions) {
-            case MOVE -> makeMove(animal, travelSpeed, row, columns, isActionDone);
+            case MOVE -> makeMove(copyList, animal, row, columns);
             //case EAT -> eat(animal, kgForFullSaturation, row, columns, isActionDone);
-            //case REPRODUCE -> reproduce(animal, row, columns, isActionDone);
+            case REPRODUCE -> reproduce(copyList, animal);
             default -> throw new IllegalStateException(String.valueOf(TextMassages.FAILURE_TO_CHOOSE_ACTION));
         }
     }
 
-    public void makeMove(Entity animal, int travelSpeed, int row, int columns, boolean isActionDone) {
-        DirectionsOfMoving directionOfMoving = chooseDirection();
+    public void makeMove(List<Entity> copyList, Entity animal, int row, int columns) {
+        directionOfMoving = chooseDirection();
+        int travelSpeed = getMaxNumberOnPosition(animal);
         switch (directionOfMoving) {
-            case NORTH -> moveNorth(animal, travelSpeed, row, columns, isActionDone);
-            case SOUTH -> moveSouth(animal, travelSpeed, row, columns, isActionDone);
-            case WEST -> moveWest(animal, travelSpeed, row, columns, isActionDone);
-            case EAST -> moveEast(animal, travelSpeed, row, columns, isActionDone);
+            case NORTH -> moveNorth(copyList, animal, travelSpeed, row, columns);
+            case SOUTH -> moveSouth(copyList, animal, travelSpeed, row, columns);
+            case WEST -> moveWest(copyList, animal, travelSpeed, row, columns);
+            case EAST -> moveEast(copyList, animal, travelSpeed, row, columns);
             default -> throw new IllegalStateException(TextMassages.NO_CHOOSING_DIRECTION.getMassage());
         }
     }
@@ -62,87 +74,74 @@ public class AnimalActions {
         return enumRandomChoice.chooseRandomEnum(DirectionsOfMoving.class);
     }
 
-    public void moveNorth(Entity animal, int travelSpeed, int row, int columns, boolean isActionDone) {
+    public void moveNorth(List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
         travelSpeed = travelSpeed * -1;
-        moveNorthSouth(animal, travelSpeed, row, columns, isActionDone);
+        moveNorthSouth(copyList, animal, travelSpeed, row, columns);
     }
 
-    public void moveSouth (Entity animal,int travelSpeed, int row, int columns, boolean isActionDone){
-        moveNorthSouth(animal, travelSpeed, row, columns, isActionDone);
+    public void moveSouth (List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns){
+        moveNorthSouth(copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveWest (Entity animal,int travelSpeed, int row, int columns, boolean isActionDone){
+    private void moveWest (List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns){
         travelSpeed = travelSpeed * -1;
-        moveWestEast(animal, travelSpeed, row, columns, isActionDone);
+        moveWestEast(copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveEast (Entity animal,int travelSpeed, int row, int columns, boolean isActionDone){
-        moveWestEast(animal, travelSpeed, row, columns, isActionDone);
+    private void moveEast (List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns){
+        moveWestEast(copyList, animal, travelSpeed, row, columns);
     }
 
     private void eat (Entity animal,double kgForFullSaturation, int row, int columns, boolean isActionDone){
         List<Entity> list = (List<Entity>) island[row][columns];
 
     }
-    private void reproduce (Entity animal, int row, int columns, boolean isActionDone){
-        List<Entity> list = (List<Entity>) island[row][columns];
+    private void reproduce (List<Entity> copyList, Entity animal){
         int maxNumberOnPosition = getMaxNumberOnPosition(animal);
-        int numberOfSameAnimalOnPosition = getNumberOfSameAnimalOnPosition(list,animal);
+        int numberOfSameAnimalOnPosition = getNumberOfSameAnimalOnPosition(copyList,animal);
         if(numberOfSameAnimalOnPosition > 1 && numberOfSameAnimalOnPosition < maxNumberOnPosition) {
-            list.add(animal);
-        }
-    }
-    private void moveWestEast (Entity animal, int travelSpeed, int row, int columns, boolean isActionDone){
-
-        int outOfBoundArray = row + travelSpeed;
-
-        if(outOfBoundArray <= 0 && outOfBoundArray > width) {
-
-            return;
+            setActionDoneFlag((Animal) animal);
         } else {
-            List<Entity> currentList = (List<Entity>) island[row][columns];
-            List<Entity> targetList = (List<Entity>) island[row][columns + travelSpeed];
-            Iterator<Entity> entityIterator = currentList.iterator(); //создаем итератор
-            while (entityIterator.hasNext()) {//до тех пор, пока в списке есть элементы
-                Entity nextEntity = entityIterator.next();//получаем следующий элемент
-                int maxNumberOnPosition = getMaxNumberOnPosition(animal);
-                int countOfSameAnimals = getNumberOfSameAnimalOnPosition(targetList, animal);
-                if (countOfSameAnimals < maxNumberOnPosition) {
-                    if (nextEntity.getClass().getName().equals(animal)) {
-                        currentList.remove(animal);//удаляем
-                    }
-                }
-                setActionDoneFlag((Animal) animal);
-                targetList.add(animal);
-            }
+            setActionDoneFlag((Animal) animal);
+            Entity newBornAnimal = entitiesProduction.createNewBornAnimal(animal);
+            copyList.add(newBornAnimal);
+            setActionDoneFlag((Animal) animal);
+        }
+    }
+    private void moveWestEast (List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns){
+        int outOfBoundArray = row + travelSpeed;
+        if (outOfBoundArray <= 0 || outOfBoundArray >= width) {
+            setActionDoneFlag((Animal) animal);
+            return;
+        }
+        List<Entity> targetList = (List<Entity>) island[row][columns + travelSpeed];
+        int maxNumberOnPosition = getMaxNumberOnPosition(animal);
+        int countOfSameAnimals = getNumberOfSameAnimalOnPosition(targetList, animal);
+        if (countOfSameAnimals < maxNumberOnPosition){
+            copyList.remove(animal);//delete animal from current position
+            setActionDoneFlag((Animal) animal); // add animal to new position
+            targetList.add(animal);
         }
     }
 
-private void setActionDoneFlag (Animal animal) {
+    private void setActionDoneFlag (Animal animal) {
         animal.setActionDone(true);
 }
 
-    private void moveNorthSouth (Entity animal, int travelSpeed, int row, int columns, boolean isActionDone) {
-        int outOfBoundArray = row + travelSpeed;
-        if(outOfBoundArray <= 0 && outOfBoundArray > length) {
-            return;
-        } else
-        {
-            List<Entity> currentList = (List<Entity>) island[row][columns];
-            List<Entity> targetList = (List<Entity>) island[row + travelSpeed][columns];
-            Iterator<Entity> entityIterator = currentList.iterator();//создаем итератор
-            //while (entityIterator.hasNext()) {//до тех пор, пока в списке есть элементы
-                Entity nextEntity = entityIterator.next();//получаем следующий элемент
-                int maxNumberOnPosition = getMaxNumberOnPosition(animal);
-                int countOfSameAnimals = getNumberOfSameAnimalOnPosition(targetList, animal);
-                if(countOfSameAnimals < maxNumberOnPosition) {
-                    if (nextEntity.getClass().getName().equals(animal)) {
-                        currentList.remove(animal);//удаляем кота с нужным именем
-                    }
-                }
+    private void moveNorthSouth (List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
 
-            //List<Entity> newPosition = (List<Entity>) island[row + travelSpeed][columns];
-            targetList.add(animal);
+        int outOfBoundArray = row + travelSpeed;
+        if (outOfBoundArray <= 0 || outOfBoundArray >= length) {
+            setActionDoneFlag((Animal) animal);
+            return;
+        }
+        List<Entity> targetList = (List<Entity>) island[row + travelSpeed][columns ];
+        int maxNumberOnPosition = getMaxNumberOnPosition(animal);
+        int countOfSameAnimals = getNumberOfSameAnimalOnPosition(targetList, animal);
+        if (countOfSameAnimals < maxNumberOnPosition){
+            copyList.remove(animal);//delete animal from current position
+            setActionDoneFlag((Animal) animal); // mark the animal as action done
+            targetList.add(animal);// add animal to new position
         }
     }
     private int getMaxNumberOnPosition(Entity animal) {
@@ -164,7 +163,7 @@ private void setActionDoneFlag (Animal animal) {
     }
 
     private void findFood (Animal animal, int row, int columns) {
-        List<Entity> list = (List<Entity>) island[row][columns];
+        //List<Entity> list = (List<Entity>) island[row][columns];
 
     }
 }

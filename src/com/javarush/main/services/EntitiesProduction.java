@@ -5,9 +5,10 @@ import com.javarush.main.enums.AnimalParametersTypes;
 import com.javarush.main.enums.TextMassages;
 import com.javarush.main.species.abstractclasses.Animal;
 import com.javarush.main.species.abstractclasses.Entity;
+
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,7 +18,7 @@ public class EntitiesProduction {
     GrassGrowth grassGrowth = new GrassGrowth();
     public static List<Entity> listOfEntitiesOnPosition = new ArrayList<>();
 
-    public List<Entity> createListOfEntitiesOnPosition () {
+    public List<Entity> createListOfEntitiesOnPosition() {
         listOfEntitiesOnPosition.clear();
         listOfEntitiesOnPosition.addAll(createListOfRandomAnimals());
         //System.out.println(listOfEntitiesOnPosition.size());
@@ -26,9 +27,9 @@ public class EntitiesProduction {
         return listOfEntitiesOnPosition;
     }
 
-    public List<Entity> createListOfRandomAnimals () {
+    public List<Entity> createListOfRandomAnimals() {
         List<Entity> listOfRandomAnimals = new ArrayList<>();
-        for(AnimalEnum animalEnum : AnimalEnum.values()) {
+        for (AnimalEnum animalEnum : AnimalEnum.values()) {
             double weight = Double.parseDouble(PropertiesLoader
                     .getAnimalProperties(animalEnum, AnimalParametersTypes.WEIGHT));
             int maxNumberOnPosition = Integer.parseInt(PropertiesLoader
@@ -55,6 +56,36 @@ public class EntitiesProduction {
             }
 
         }
-        return  listOfRandomAnimals;
+        return listOfRandomAnimals;
+    }
+
+    public Entity createNewBornAnimal(Entity animal) {
+        Animal newBornAnimal = null;
+        for (AnimalEnum animalEnum : AnimalEnum.values()) {
+            if (animalEnum.getClazz() == animal.getClass()) {
+                double weight = Double.parseDouble(PropertiesLoader
+                        .getAnimalProperties(animalEnum, AnimalParametersTypes.WEIGHT));
+                int maxNumberOnPosition = Integer.parseInt(PropertiesLoader
+                        .getAnimalProperties(animalEnum, AnimalParametersTypes.MAX_NUMBER_ON_POSITION), 10);
+                int maxTravelSpeed = Integer.parseInt(PropertiesLoader.getAnimalProperties(animalEnum,
+                        AnimalParametersTypes.MAX_TRAVEL_SPEED), 10);
+                double kgForFullSaturation = Double.parseDouble(PropertiesLoader.getAnimalProperties(animalEnum,
+                        AnimalParametersTypes.KG_FOR_FULL_SATURATION));
+                boolean ifActionDone = true;
+                try {
+                    newBornAnimal = (Animal) animalEnum.getClazz()
+                            .getConstructor(double.class, int.class, int.class, double.class, boolean.class)
+                            .newInstance(weight, maxNumberOnPosition, maxTravelSpeed, kgForFullSaturation, ifActionDone);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                        NoSuchMethodException e) {
+                    System.out.println(TextMassages.FAILURE_TO_CREATE_INHABITANTS);
+                    e.printStackTrace();
+
+                }
+            }
+
+
+        }
+        return newBornAnimal;
     }
 }

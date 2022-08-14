@@ -1,12 +1,10 @@
 package com.javarush.main.game;
 
-
-import java.util.Arrays;
 import java.util.List;
 
 public class Island {
-    private static int length = 100;
-    private static int width = 20;
+    private static int length = 5;
+    private static int width = 5;
     private static List[][] island = new List[length][width];
 
     public Island() {

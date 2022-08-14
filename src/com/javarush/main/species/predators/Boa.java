@@ -3,8 +3,10 @@ package com.javarush.main.species.predators;
 import com.javarush.main.annotations.Predators;
 import com.javarush.main.species.abstractclasses.Animal;
 
+import java.io.Serializable;
+
 @Predators
-public class Boa extends Animal {
+public class Boa extends Animal implements Serializable {
     /*private double weight;
     private int maxNumberOnPosition;
     private int maxTravelSpeed;

@@ -23,12 +23,12 @@ public class IslandInitialization {
 
     public Object[][] islandInitialization () {
         Object[][] island = Island.getInstance();
-        makeNullEdgesOfIsland(island);
+        //makeNullEdgesOfIsland(island);
         setEntitiesOnPosition (island);
         return island;
     }
 
-    private Object [][] makeNullEdgesOfIsland (Object[][] island) {
+   /* private Object [][] makeNullEdgesOfIsland (Object[][] island) {
         for (int row = 0; row < island.length; row++) {
             for (int columns = 0; columns < island[row].length; columns++) {
                 if (row == 0) {
@@ -46,12 +46,12 @@ public class IslandInitialization {
             }
         }
         return island;
-    }
+    }*/
 
     private Object [][] setEntitiesOnPosition (Object [][] island) {
-        makeNullEdgesOfIsland(island);
-        for (int row = 1; row < island.length-1; row++) {
-            for (int columns = 1; columns < island[row].length - 1; columns++) {
+        //makeNullEdgesOfIsland(island);
+        for (int row = 1; row < island.length; row++) {
+            for (int columns = 1; columns < island[row].length; columns++) {
                 island[row][columns] = entitiesProduction.createListOfEntitiesOnPosition();
             }
         }

@@ -11,7 +11,7 @@ public class StartGame {
     PropertiesLoader propertiesLoader = new PropertiesLoader();
     ConsoleDialogue consoleDialogue = new ConsoleDialogue();
     IslandInitialization islandInitialization;
-    Statistic statistic;
+    Statistic statistic = new Statistic();
     AnimalActions actions = new AnimalActions();
 
     public void play() {
@@ -21,7 +21,7 @@ public class StartGame {
             consoleDialogue.startDialogue();
             //statistic.printTotalStatistic(islandInitialization.islandInitialization());
 
-            int daysGameLasts = 5;
+            int daysGameLasts = 3;
             for (int i = 0; i < daysGameLasts; i++) {
                 actions.islandAnimalIteration();
                 statistic.printTotalStatistic(Island.getInstance());

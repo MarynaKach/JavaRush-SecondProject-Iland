@@ -4,11 +4,11 @@ import com.javarush.main.enums.TextMassages;
 import java.util.List;
 
 public class Statistic {
-    public void printTotalStatistic (Object[][] initializedIsland) {
+    public void printTotalStatistic (Object[][] island) {
         System.out.println(TextMassages.STATISTIC_ON_BEGINNING_OF_GAME.getMassage());
-        countNumberOfPredators(initializedIsland);
-        countNumberOfHerbivores(initializedIsland);
-        countNumberOfGrass(initializedIsland);
+        countNumberOfPredators(island);
+        countNumberOfHerbivores(island);
+        countNumberOfGrass(island);
     }
 
     public void countNumberOfPredators(Object[][] initializedIsland) {

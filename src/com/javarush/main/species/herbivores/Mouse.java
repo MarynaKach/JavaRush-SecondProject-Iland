@@ -4,8 +4,10 @@ package com.javarush.main.species.herbivores;
 import com.javarush.main.annotations.Herbivores;
 import com.javarush.main.species.abstractclasses.Animal;
 
+import java.io.Serializable;
+
 @Herbivores
-public class Mouse extends Animal {
+public class Mouse extends Animal implements Serializable {
     /*private double weight;
     private int maxNumberOnPosition;
     private int maxTravelSpeed;
