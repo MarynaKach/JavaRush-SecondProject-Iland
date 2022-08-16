@@ -31,7 +31,7 @@ public class ConsoleDialogue {
         if(ifEqualYes){
             chooseIslandSize ();
         } if(ifEqualNot ) {
-            statistic.printTotalStatistic(islandInitialization.islandInitialization());
+            statistic.printStatisticOnStart(islandInitialization.islandInitialization());
         }
     }
 
@@ -56,7 +56,7 @@ public class ConsoleDialogue {
             changeIslandLength(island, newLength);
             changeIslandWidth(island, newWidth);
 
-            statistic.printTotalStatistic(islandInitialization.islandInitialization());
+            statistic.printStatisticOnStart(islandInitialization.islandInitialization());
             System.out.println(Arrays.deepToString(island));
         }
     }

@@ -3,8 +3,8 @@ package com.javarush.main.game;
 import java.util.List;
 
 public class Island {
-    private static int length = 5;
-    private static int width = 5;
+    private static int length = 2;
+    private static int width = 2;
     private static List[][] island = new List[length][width];
 
     public Island() {

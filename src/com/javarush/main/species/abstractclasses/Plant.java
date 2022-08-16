@@ -8,4 +8,12 @@ public abstract class Plant extends Entity {
         this.weight = weight;
         this.maxNumberOnPosition = maxNumberOnPosition;
     }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public int getMaxNumberOnPosition() {
+        return maxNumberOnPosition;
+    }
 }

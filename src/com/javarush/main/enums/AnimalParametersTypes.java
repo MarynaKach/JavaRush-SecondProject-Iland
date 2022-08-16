@@ -4,7 +4,9 @@ public enum AnimalParametersTypes {
     WEIGHT ("weight"),
     MAX_NUMBER_ON_POSITION("maxNumberOnPosition"),
     MAX_TRAVEL_SPEED("maxTravelSpeed"),
-    KG_FOR_FULL_SATURATION("kgForFullSaturation");
+    KG_FOR_FULL_SATURATION("kgForFullSaturation"),
+    POSSIBILITY_TO_EAT ("possibilityToEat"),
+    SATURATION_RATIO("saturationRatio");
 
     String name;
 

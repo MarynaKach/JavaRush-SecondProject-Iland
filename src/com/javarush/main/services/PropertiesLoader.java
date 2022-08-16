@@ -1,5 +1,7 @@
 package com.javarush.main.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javarush.main.enums.AnimalEnum;
 import com.javarush.main.enums.AnimalParametersTypes;
 import com.javarush.main.enums.TextMassages;
@@ -7,6 +9,8 @@ import com.javarush.main.enums.TextMassages;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class PropertiesLoader {
@@ -31,6 +35,17 @@ public class PropertiesLoader {
         String propertyKey = animalEnum.getName() + "_" + animalParametersTypes.getName();
         return  properties.getProperty(propertyKey);
     }
+
+    protected static void getValueOfEatingRatio (Map<String,Integer> map, AnimalEnum whoEat, AnimalEnum whomEat, AnimalParametersTypes animalParametersTypes) {
+        //Map<String,Integer> map = new HashMap<String,Integer>();
+        String propertyKey = whoEat.getName() + "_" + animalParametersTypes.getName() + "_"+ whomEat.getName();
+        if (properties.getProperty(propertyKey) != null) {
+            String animalEatable = whomEat.getName();
+            Integer eatingRation = (Integer) Integer.parseInt(properties.getProperty(propertyKey));
+            map.put(animalEatable, eatingRation);
+        }
+    }
+
 
     protected static String  getEatingRatio (AnimalEnum animalEnum, AnimalParametersTypes animalParametersTypes) {
         String eatingRation = animalEnum.getName() + "_possibilityToEat_" + animalEnum.getName();

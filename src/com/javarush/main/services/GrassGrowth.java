@@ -19,6 +19,9 @@ public class GrassGrowth {
            randomNumberOfGrass.add(new Grass(weight, maxNumberOfGrass));
 
        }
+       if (randomNumberOfGrass.size() == 0) {
+           setGrassOnPosition();
+       }
        return  randomNumberOfGrass;
    }
 }

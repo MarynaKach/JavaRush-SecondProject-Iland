@@ -1,11 +1,18 @@
 package com.javarush.main.services;
 
 import com.javarush.main.enums.TextMassages;
+
+import javax.swing.*;
 import java.util.List;
 
 public class Statistic {
-    public void printTotalStatistic (Object[][] island) {
+    public void printStatisticOnStart (Object[][] island) {
         System.out.println(TextMassages.STATISTIC_ON_BEGINNING_OF_GAME.getMassage());
+        countNumberOfPredators(island);
+        countNumberOfHerbivores(island);
+        countNumberOfGrass(island);
+    }
+    public void countStatisticOfDays (Object[][] island) {
         countNumberOfPredators(island);
         countNumberOfHerbivores(island);
         countNumberOfGrass(island);

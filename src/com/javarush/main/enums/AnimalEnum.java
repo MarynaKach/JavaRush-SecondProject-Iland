@@ -1,6 +1,7 @@
 package com.javarush.main.enums;
 
 import com.javarush.main.species.herbivores.*;
+import com.javarush.main.species.plant.Grass;
 import com.javarush.main.species.predators.Boa;
 import com.javarush.main.species.predators.Eagle;
 import com.javarush.main.species.predators.Fox;
@@ -21,7 +22,8 @@ public enum AnimalEnum {
     BOA ("Boa", Boa.class),
     EAGLE ("Eagle", Eagle.class),
     FOX ("Fox", Fox.class),
-    WOLF ("Wolf", Wolf.class);
+    WOLF ("Wolf", Wolf.class),
+    GRASS ("Grass", Grass.class);
 
     String name;
     Class clazz;

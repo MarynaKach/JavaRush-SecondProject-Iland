@@ -1,7 +1,7 @@
 package com.javarush.main.enums;
 
 public enum Actions {
-    //EAT,
+    EAT,
     REPRODUCE,
     MOVE;
 

@@ -2,6 +2,7 @@ package com.javarush.main.enums;
 
 public enum TextMassages {
     STATISTIC_ON_BEGINNING_OF_GAME ("The statistic of animals and grass on the Island on the start of the game: "),
+    STATISTIC_ON_BEGINNING_OF_DAY ("The statistic of animals and grass on the Island on the end of day %d: \n" ),
     NUMBER_OF_PREDATORS("The number of predators on the Island is: "),
     NUMBER_OF_HERBIVORES("The number of herbivores on the Island is: "),
     NUMBER_OF_GRASS("The number of plant on the Island is: "),
