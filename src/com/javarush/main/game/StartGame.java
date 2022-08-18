@@ -20,7 +20,7 @@ public class StartGame {
             consoleDialogue.startDialogue();
 
 
-            int daysGameLasts = 3;
+            int daysGameLasts = Island.getDaysGameLasts();
             for (int i = 0; i < daysGameLasts; i++) {
                 actions.islandAnimalIteration();
                 System.out.printf(TextMassages.STATISTIC_ON_BEGINNING_OF_DAY.getMassage(), i+1);

@@ -10,6 +10,7 @@ import com.javarush.main.species.plant.Grass;
 
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class AnimalActions {
     EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
@@ -45,8 +46,8 @@ public class AnimalActions {
             }
         }
         setFalseIfActionDone(island);
-        dyingOfHungryAnimal(island);
         letGrassGrow(island);
+        dyingOfHungryAnimal(island);
     }
     public void dyingOfHungryAnimal(Object[][] island) {
         for (int row = 1; row < island.length; row++) {
@@ -55,30 +56,36 @@ public class AnimalActions {
                 for (int i = 0; i < listOfEntitiesOnPosition.size(); i++) {
                     List<Entity> copyList = listOfEntitiesOnPosition;
                     Entity entity = copyList.get(i);
-                    if (entity.getClass().getPackageName().contains("animal")) {
+                    boolean ifEntityAnimal = entity.getClass().getPackageName().contains("plant");
+                    if (!ifEntityAnimal) {
                         Animal animal = (Animal) entity;
                         int saturationRatio = animal.getSaturationRatio();
                         if (saturationRatio <= 0) {
                             copyList.remove(animal);
                         }
                     }
+                    listOfEntitiesOnPosition = copyList;
                 }
             }
         }
     }
     public void chooseAction(List<Entity> copyList, Entity animal, int row, int columns) {
+        Animal currentAnimal = (Animal) animal;
         actions = enumRandomChoice.chooseRandomEnum(Actions.class);
         switch (actions) {
-            case MOVE -> makeMove(copyList, animal, row, columns);
-            case EAT -> eat(copyList, animal, row, columns);
-            case REPRODUCE -> reproduce(copyList, animal);
+            case MOVE -> makeMove(copyList, currentAnimal, row, columns);
+            case EAT -> eat(copyList, currentAnimal, row, columns);
+            case REPRODUCE -> reproduce(copyList, currentAnimal);
             default -> throw new IllegalStateException(String.valueOf(TextMassages.FAILURE_TO_CHOOSE_ACTION));
         }
     }
 
-    public void makeMove(List<Entity> copyList, Entity animal, int row, int columns) {
+    public void makeMove(List<Entity> copyList, Animal animal, int row, int columns) {
         directionOfMoving = chooseDirection();
-        int travelSpeed = maxNumberOnPosition(animal);
+        int travelSpeed = animal.getMaxTravelSpeed();
+        if (travelSpeed == 0) {
+            return;
+        }
         switch (directionOfMoving) {
             case NORTH -> moveNorth(copyList, animal, travelSpeed, row, columns);
             case SOUTH -> moveSouth(copyList, animal, travelSpeed, row, columns);
@@ -86,61 +93,58 @@ public class AnimalActions {
             case EAST -> moveEast(copyList, animal, travelSpeed, row, columns);
             default -> throw new IllegalStateException(TextMassages.NO_CHOOSING_DIRECTION.getMassage());
         }
-        Animal movingAnimal = (Animal) animal;
-        int saturationRatio = movingAnimal.getSaturationRatio();
-        movingAnimal.setSaturationRatio(saturationRatio - 1);
+        int saturationRatio = animal.getSaturationRatio();
+        animal.setSaturationRatio(saturationRatio - 1);
     }
 
     public DirectionsOfMoving chooseDirection() {
         return enumRandomChoice.chooseRandomEnum(DirectionsOfMoving.class);
     }
 
-    public void moveNorth(List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
+    public void moveNorth(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         travelSpeed = travelSpeed * -1;
         moveNorthSouth(copyList, animal, travelSpeed, row, columns);
     }
 
-    public void moveSouth(List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
+    public void moveSouth(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         moveNorthSouth(copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveWest(List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
+    private void moveWest(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         travelSpeed = travelSpeed * -1;
         moveWestEast(copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveEast(List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
+    private void moveEast(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         moveWestEast(copyList, animal, travelSpeed, row, columns);
     }
 
-    private void reproduce(List<Entity> copyList, Entity animal) {
-        int maxNumberOnPosition = maxNumberOnPosition(animal);
+    private void reproduce(List<Entity> copyList, Animal animal) {
+        int maxNumberOnPosition = animal.getMaxNumberOnPosition();
         int numberOfSameAnimalOnPosition = countNumberOfSameEntityOnPosition(copyList, animal);
         if (numberOfSameAnimalOnPosition > 1 && numberOfSameAnimalOnPosition < maxNumberOnPosition) {
-            changeActionDoneFlag((Animal) animal, true);
-        } else {
-            changeActionDoneFlag((Animal) animal, true);
+            changeActionDoneFlag(animal, true);
             Entity newBornAnimal = entitiesProduction.createNewBornAnimal(animal);
             copyList.add(newBornAnimal);
-
+        } else {
+            changeActionDoneFlag(animal, true);
         }
-        Animal reproducingAnimal = (Animal) animal;
-        int saturationRatio = reproducingAnimal.getSaturationRatio();
-        reproducingAnimal.setSaturationRatio(saturationRatio - 1);
+        int saturationRatio = animal.getSaturationRatio();
+        animal.setSaturationRatio(saturationRatio - 1);
     }
 
-    private void moveWestEast(List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
-        int outOfBoundArray = row + travelSpeed;
+    private void moveWestEast(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
+        int outOfBoundArray = columns + travelSpeed;
         if (outOfBoundArray <= 0 || outOfBoundArray >= width) {
-            changeActionDoneFlag((Animal) animal, true);
+            changeActionDoneFlag(animal, true);
             return;
         }
         List<Entity> targetList = (List<Entity>) island[row][columns + travelSpeed];
         int maxNumberOnPosition = maxNumberOnPosition(animal);
         int countOfSameAnimals = countNumberOfSameEntityOnPosition(targetList, animal);
         if (countOfSameAnimals < maxNumberOnPosition) {
-            copyList.remove(animal);//delete animal from current position
-            changeActionDoneFlag((Animal) animal, true); // add animal to new position
+            copyList.remove(animal);
+            changeActionDoneFlag(animal, true);
             targetList.add(animal);
         }
     }
@@ -150,19 +154,19 @@ public class AnimalActions {
         animal.setActionDone(flag);
     }
 
-    private void moveNorthSouth(List<Entity> copyList, Entity animal, int travelSpeed, int row, int columns) {
+    private void moveNorthSouth(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
 
         int outOfBoundArray = row + travelSpeed;
         if (outOfBoundArray <= 0 || outOfBoundArray >= length) {
-            changeActionDoneFlag((Animal) animal, true);
+            changeActionDoneFlag(animal, true);
             return;
         }
         List<Entity> targetList = (List<Entity>) island[row + travelSpeed][columns];
-        int maxNumberOnPosition = maxNumberOnPosition(animal);
+        int maxNumberOnPosition = animal.getMaxNumberOnPosition();
         int countOfSameAnimals = countNumberOfSameEntityOnPosition(targetList, animal);
         if (countOfSameAnimals < maxNumberOnPosition) {
             copyList.remove(animal);//delete animal from current position
-            changeActionDoneFlag((Animal) animal, true); // mark the animal as action done
+            changeActionDoneFlag(animal, true); // mark the animal as action done
             targetList.add(animal);// add animal to new position
         }
     }
@@ -191,47 +195,75 @@ public class AnimalActions {
         return countOfSameEntities;
     }
 
-    private void eat(List<Entity> copyList, Entity entity, int row, int columns) {
-        Entity targetEntity  = findEatableAnimalWithMaxNumberOnPosition(copyList, entity);
-        int countOfTargetAnimalToEat = countNumberOfAnimalToEat(copyList, entity, targetEntity);
-        for (int i = 0; i < countOfTargetAnimalToEat; i++) {
-            copyList.remove(targetEntity);
+    private void eat(List<Entity> copyList, Animal animal, int row, int columns) {
+        HashMap<String, Integer> eatingRationMap = animal.getEatingRatio();
+        String targetEntity  = findRandomAnimalToEat(copyList, animal, eatingRationMap);
+        boolean ifHunterCanEatTarget = ifHunterEatTarget(eatingRationMap, targetEntity);
+        if (ifHunterCanEatTarget) {
+            int countOfTargetAnimalToEat = countNumberOfAnimalToEat(copyList, animal, targetEntity);
+            for (int i = 0; i < copyList.size(); i++) {
+                if (targetEntity.getClass().getSimpleName().equalsIgnoreCase(copyList.get(i).getClass().getSimpleName()))
+                copyList.remove(targetEntity);
+                countOfTargetAnimalToEat = countOfTargetAnimalToEat - 1;
+                if (countOfTargetAnimalToEat == 0 ){
+                    continue;
+                }
+            }
         }
+        animal.setActionDone(true);
+    }
+    public boolean ifHunterEatTarget (HashMap<String, Integer> eatingRationMap, String targetEntity) {
+        boolean ifHunterEatTarget = false;
+        int possibilityToEatRatio = eatingRationMap.get(targetEntity);
+        int randomPossibilityToEat = ThreadLocalRandom.current().nextInt(possibilityToEatRatio);
+        if (randomPossibilityToEat < possibilityToEatRatio) {
+            ifHunterEatTarget = true;
+        }
+        return ifHunterEatTarget;
     }
 
-    private int countNumberOfAnimalToEat (List<Entity> copyList, Entity entity, Entity targetEntity) {
-        Animal hunterAnimal = (Animal) entity;
+    private int countNumberOfAnimalToEat (List<Entity> copyList, Animal animal, String targetEntityName) {
+        int howMuchEntityToEat = 0;
+        Animal hunterAnimal = animal;
         double kgForFullSaturation = hunterAnimal.getKgForFullSaturation();
         double weight = 0;
-        int numberOfTargetEntityOnPosition = (int) copyList.stream()
-                .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(targetEntity.getClass().getSimpleName()))
-                .count();
-        int countOfTargetAnimalToEat = 0;
+        int numberOfTargetEntityOnPosition = 0;
+        Entity targetEntity = entity;
+        for (Entity e : copyList) {
+            if(e.getClass().getSimpleName().equalsIgnoreCase(targetEntityName)) {
+                numberOfTargetEntityOnPosition++;
+                targetEntity = e;
+            }
+
+        }
+        if (targetEntity == null) {
+            return numberOfTargetEntityOnPosition;
+        }
         if (ifEntityAnimal(targetEntity)) {
             Animal targetAnimal = (Animal) targetEntity;
             weight = targetAnimal.getWeight();
-            int howManyFoodMayEat = (int) Math.round(kgForFullSaturation/weight*numberOfTargetEntityOnPosition);
-            if (howManyFoodMayEat < 0) {
-                countOfTargetAnimalToEat = numberOfTargetEntityOnPosition;
+            int totalWeightOfFoodOnPosition = (int) (weight*numberOfTargetEntityOnPosition);
+            if (totalWeightOfFoodOnPosition < kgForFullSaturation) {
+                howMuchEntityToEat = numberOfTargetEntityOnPosition;
             } else {
-                countOfTargetAnimalToEat = (int) Math.ceil(kgForFullSaturation/weight);
+                howMuchEntityToEat = (int) Math.ceil(kgForFullSaturation/weight);
             }
         } else if (ifEntityPlant(targetEntity)){
             Grass targetFood = (Grass) targetEntity;
             weight = targetFood.getWeight();
-            double howMuchEntityToEach = weight*numberOfTargetEntityOnPosition/kgForFullSaturation;
-            if (howMuchEntityToEach < 0) {
-                countOfTargetAnimalToEat = numberOfTargetEntityOnPosition;
+            int totalWeightOfFoodOnPosition = (int) (weight*numberOfTargetEntityOnPosition);
+            if (totalWeightOfFoodOnPosition < kgForFullSaturation) {
+                howMuchEntityToEat = numberOfTargetEntityOnPosition;
             } else {
-                countOfTargetAnimalToEat = (int) Math.ceil(kgForFullSaturation/weight);
+                howMuchEntityToEat = (int) Math.ceil(kgForFullSaturation/weight);
             }
         }
         int minRationToEat = 2;
-        if (kgForFullSaturation/(weight*countOfTargetAnimalToEat) < minRationToEat) {
+        if (kgForFullSaturation/(weight*howMuchEntityToEat) > minRationToEat) {
             int saturationRation = hunterAnimal.getSaturationRatio();
             hunterAnimal.setSaturationRatio(saturationRation - 1);
         }
-       return countOfTargetAnimalToEat;
+       return howMuchEntityToEat;
     }
     private boolean ifEntityAnimal (Entity targetEntity) {
         String packageName = targetEntity.getClass().getPackageName();
@@ -244,35 +276,45 @@ public class AnimalActions {
         return ifEntityAnimal;
     }
 
-    private Entity findEatableAnimalWithMaxNumberOnPosition (List<Entity> copyList, Entity entity) {
-        Animal currentAnimal = (Animal) entity;
-        HashMap<String, Integer> eatingRatio = currentAnimal.getEatingRatio();
-        Set<String> entityEatable = eatingRatio.keySet();
+    private String findRandomAnimalToEat (List<Entity> copyList, Animal animal, HashMap<String, Integer> eatingRationMap) {
+        Set<String> entityEatable = eatingRationMap.keySet();
         int size = entityEatable.size();
+        int randomPossibilityToEat = 0;
         String [] entityEatableList = entityEatable.toArray(new String[entityEatable.size()]);
-        Integer[] numbersOfEatableEntity = new Integer[entityEatableList.length];
+        if (size > 1) {
+            randomPossibilityToEat = ThreadLocalRandom.current().nextInt(entityEatableList.length);
+        }
+        String targetAnimalName = entityEatableList[randomPossibilityToEat];
+
+        /*Integer[] numbersOfEatableEntity = new Integer[entityEatableList.length];
+        int count = -1;
         for (int i = 0; i < entityEatableList.length; i++) {
+            int maxNumberOfEatableEntityOnPosition = 0;
             String nameOfEatableEntity = entityEatableList[i];
             int numberOfEatableEntityOnPosition = (int) copyList.stream()
                     .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(nameOfEatableEntity))
                     .count();
-            numbersOfEatableEntity[i] = numberOfEatableEntityOnPosition;
-        }
-        int indexOfMax = 0;
+            if (numberOfEatableEntityOnPosition > maxNumberOfEatableEntityOnPosition) {
+                maxNumberOfEatableEntityOnPosition = numberOfEatableEntityOnPosition;
+                count ++;
+            } else {
+                count++;
+            }
+        }*/
+      /*  int indexOfMax = 0;
         for (int i = 0; i < numbersOfEatableEntity.length; i++) {
             if (numbersOfEatableEntity[i] > numbersOfEatableEntity[indexOfMax]) {
                 indexOfMax = i;
             }
-        }
-        String targetAnimalName = entityEatableList[indexOfMax];
+        }*/
         Entity targetEntity = entity;
         for (int i = 0; i < copyList.size(); i++) {
             if (copyList.get(i).getClass().getSimpleName().equalsIgnoreCase(targetAnimalName)) {
                 targetEntity = copyList.get(i);
+                continue;
             }
         }
-
-        return targetEntity;
+        return targetAnimalName;
     }
 
     private void setFalseIfActionDone(Object[][] island) {
@@ -291,15 +333,13 @@ public class AnimalActions {
     }
 
     private void letGrassGrow (Object[][] island) {
-        List<Entity> listOfEntitiesOnPosition = new ArrayList<>();
         List<Entity> newGrassList = new ArrayList<>();
         int maxNumberOfGrass = Integer.parseInt(PropertiesLoader.getGrassProperties("Grass", "maxNumberOfGrass"));
         int weight = Integer.parseInt(PropertiesLoader.getGrassProperties("Grass", "weight"));
         Grass grass = new Grass (weight, maxNumberOfGrass);
-
         for (int row = 1; row < island.length; row++) {
             for (int columns = 1; columns < island[row].length; columns++) {
-                listOfEntitiesOnPosition = (List<Entity>) island[row][columns];
+                List<Entity> listOfEntitiesOnPosition = (List<Entity>) island[row][columns];
                 long numberOfGrassAtEndOFDay = listOfEntitiesOnPosition.stream()
                         .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(grass.getClass().getSimpleName()))
                         .count();
@@ -308,11 +348,12 @@ public class AnimalActions {
                     listOfEntitiesOnPosition.addAll(newGrassList);
                 }
                 if (numberOfGrassAtEndOFDay > 0) {
-                    int grassIncreasingRatio = (int) (numberOfGrassAtEndOFDay * 2);
+                    int grassIncreasingRatio = (int) Math.ceil(numberOfGrassAtEndOFDay * 0.5);
                     for (int i = 0; i < grassIncreasingRatio; i++) {
-                        listOfEntitiesOnPosition.add(new Grass(weight, maxNumberOfGrass));
+                        newGrassList.add(new Grass(weight, maxNumberOfGrass));
                     }
                 }
+                listOfEntitiesOnPosition.addAll(newGrassList);
                 newGrassList.clear();
             }
         }

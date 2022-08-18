@@ -55,7 +55,6 @@ public class ConsoleDialogue {
         if (ifEqualNot) {
             changeIslandLength(island, newLength);
             changeIslandWidth(island, newWidth);
-
             statistic.printStatisticOnStart(islandInitialization.islandInitialization());
             System.out.println(Arrays.deepToString(island));
         }

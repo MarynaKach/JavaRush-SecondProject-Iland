@@ -17,9 +17,10 @@ public class EntitiesProduction {
     PropertiesLoader propertiesLoader;
 
     GrassGrowth grassGrowth = new GrassGrowth();
-    public static List<Entity> listOfEntitiesOnPosition = new ArrayList<>();
+
 
     public List<Entity> createListOfEntitiesOnPosition() {
+        List<Entity> listOfEntitiesOnPosition = new ArrayList<>();
         listOfEntitiesOnPosition.clear();
         listOfEntitiesOnPosition.addAll(createListOfRandomAnimals());
         //System.out.println(listOfEntitiesOnPosition.size());
@@ -76,7 +77,7 @@ public class EntitiesProduction {
             }
     }
 
-    public Entity createNewBornAnimal(Entity animal) {
+    public Entity createNewBornAnimal(Animal animal) {
         Animal newBornAnimal = null;
         for (AnimalEnum animalEnum : AnimalEnum.values()) {
             if (animalEnum.getClazz() == animal.getClass()) {
