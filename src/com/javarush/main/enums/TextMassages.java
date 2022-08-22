@@ -10,18 +10,19 @@ public enum TextMassages {
     FAILURE_TO_CHOOSE_ACTION ("The action wasn't been chosen. Please start again."),
     FAILURE_TO_GET_MAX_NUMBER_ON_POSITION ("Failure to get the parameter \"maxNumberOnPosition\". "),
     FAILURE_TO_CREATE_INHABITANTS ("The inhabitants of the Island couldn't be created. Please stat again"),
-    FAILURE_TO_LOAD_PROPERTIES ("Couldn't load Game Properties, please try again."),
+    FAILURE_TO_LOAD_PROPERTIES ("Couldn't load GameApplication Properties, please try again."),
+    FAILURE_TO_GET_ISLAND_SIZE ("FAILURE_TO_LOAD_PROPERTIES"),
     NO_PARAMETERS_FOUND ("The parameters of the animal were not found. "),
     VELCOM_MASSAGE ("Hello, player! \nDefault size of the Island is:\n%d - width, \n%d - length.\nWould you like to change it?\n"),
-    NEW_SIZE_OF_ISLAND ("Now the size of the Island is:\n%d - width, \n%d - length.\nWould you like to change it again?\n"),
+    NEW_SIZE_OF_ISLAND ("Now the size of the Island is:\n%d - width, \n%d - length.\nTHE GAME STARTS!\n"),
     OPTION_TO_CHANGE_ISLAND_SIZE ("Please type: yes or not."),
     ANSWER_YES ("Yes"),
     ANSWER_NOT ("Not"),
     WHAT_YOU_WANT_TO_CHANGE ("What do you want to change? \nPlease type: width or length."),
     LENGTH ("Length"),
     WIDTH ("Width"),
-    TYPE_NEW_LENGTH ("Please, type new length from %d to %d including."),
-    TYPE_NEW_WIDTH ("Please, type new width from %d to %d including.");
+    TYPE_NEW_LENGTH ("Please, type new length starting from  %d.\n"),
+    TYPE_NEW_WIDTH ("Please, type new width starting from %d.\n");
 
     private String massage;
 

@@ -4,21 +4,18 @@ import com.javarush.main.enums.TextMassages;
 import com.javarush.main.game.Island;
 import com.javarush.main.game.IslandInitialization;
 import com.javarush.main.services.Statistic;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 
-// TO DO join to massages in one, join methods typeLength and typeWidth, join methods changeIslandLength and changeIslandWidth
+import java.util.regex.Pattern;
+
 public class ConsoleDialogue {
-    Object[][] island = Island.getInstance();
+    Island island = new Island();
+    Object[][] islandInstance = island.getInstance();
     Statistic statistic = new Statistic();
     IslandInitialization islandInitialization = new IslandInitialization();
-    int width = Island.getWidth();
-    int length = Island.getLength();
 
     public void startDialogue() {
-        System.out.printf(TextMassages.VELCOM_MASSAGE.getMassage(), width, length);
+        System.out.printf(TextMassages.VELCOM_MASSAGE.getMassage(), Island.width, Island.length);
         System.out.println(TextMassages.OPTION_TO_CHANGE_ISLAND_SIZE.getMassage());
-        // Join to massages
         String answerYesOrNo = ScannerSingleton.getInstance().nextLine();
         boolean ifEqualYes = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_YES.getMassage());
         boolean ifEqualNot = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_NOT.getMassage());
@@ -29,81 +26,45 @@ public class ConsoleDialogue {
             ifEqualNot = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_NOT.getMassage());
         }
         if(ifEqualYes){
-            chooseIslandSize ();
+            chooseNewIslandSize();
+            statistic.printStatisticOnStart(islandInitialization.islandInitialization());
         } if(ifEqualNot ) {
+            //Island.setLength(island.getDefaultLength());
+            //Island.setWidth(island.getDefaultWidth());
             statistic.printStatisticOnStart(islandInitialization.islandInitialization());
         }
     }
 
-    private void chooseIslandSize () {
-        int newWidth = typeIslandWidth();
-        int newLength = typeIslandLength();
+    private int typeNewIslandSize(TextMassages textMassages, int lowLimitSize) {
+        System.out.printf(textMassages.getMassage(), lowLimitSize);
+        String  newSize = ScannerSingleton.getInstance().nextLine();
+        while (!Pattern.matches("[0-9]+", newSize) || Integer.parseInt(newSize) < lowLimitSize) {
+            System.out.printf(textMassages.getMassage(), lowLimitSize);
+            newSize = ScannerSingleton.getInstance().nextLine();
+        }
+        return Integer.parseInt(newSize);
+    }
+
+    private void chooseNewIslandSize() {
+        int newWidth = typeNewIslandSize(TextMassages.TYPE_NEW_WIDTH, Island.minLimitWidth);//typeIslandWidth();
+        int newLength = typeNewIslandSize(TextMassages.TYPE_NEW_LENGTH, Island.minLimitLength);//typeIslandLength();
         System.out.printf(TextMassages.NEW_SIZE_OF_ISLAND.getMassage(), newWidth, newLength);
-        String answerYesOrNo = ScannerSingleton.getInstance().nextLine();
-        boolean ifEqualYes = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_YES.getMassage());
-        boolean ifEqualNot = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_NOT.getMassage());
-        while (!ifEqualYes && !ifEqualNot) {
-            System.out.println(TextMassages.OPTION_TO_CHANGE_ISLAND_SIZE.getMassage());
-            answerYesOrNo = ScannerSingleton.getInstance().nextLine();
-            ifEqualYes = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_YES.getMassage());
-            ifEqualNot = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_NOT.getMassage());
-        }
-
-        if (ifEqualYes) {
-            chooseIslandSize();
-        }
-        if (ifEqualNot) {
-            changeIslandLength(island, newLength);
-            changeIslandWidth(island, newWidth);
-            statistic.printStatisticOnStart(islandInitialization.islandInitialization());
-            System.out.println(Arrays.deepToString(island));
-        }
+        island.setLength(newLength);
+        island.setWidth(newWidth);
     }
 
-    private int typeIslandWidth () {
-        int lowLimitWidth = 3;
-        int highLimitWidth = 19;
-        System.out.printf(TextMassages.TYPE_NEW_WIDTH.getMassage(), lowLimitWidth, highLimitWidth);
-        int newWidth = ScannerSingleton.getInstance().nextInt();
-        while (newWidth < lowLimitWidth || newWidth > highLimitWidth) {
-            System.out.printf(TextMassages.TYPE_NEW_WIDTH.getMassage(), lowLimitWidth, highLimitWidth);
-            newWidth = ScannerSingleton.getInstance().nextInt();
-        }
-        return newWidth;
-    }
 
-    private int typeIslandLength () {
-        int lowLimitLength = 3;
-        int highLimitLength = 99;
-        System.out.printf(TextMassages.TYPE_NEW_LENGTH.getMassage(), lowLimitLength, highLimitLength);
-        int newLength = ScannerSingleton.getInstance().nextInt();
-        while (newLength < lowLimitLength || newLength > highLimitLength) {
-            System.out.printf(TextMassages.TYPE_NEW_LENGTH.getMassage(), lowLimitLength, highLimitLength);
-            newLength = ScannerSingleton.getInstance().nextInt();
-        }
-        return newLength;
-    }
-// TO DO the size of island isn't changed, check why
-    private void changeIslandLength (Object[][] island, int newLength) {
-        try {
-            Field field = Island.class.getDeclaredField("length");
+
+   /* private void changeIslandSize (Object[][] island, int newSize, String fieldName) {
+        Island.setLength();
+        *//*try {
+            Field field = Island.class.getDeclaredField(fieldName);
             field.setAccessible(true);
-            field.set(island, newLength);
-            length = (int) field.get(field);
+            field.set(island, newSize);
+            field.setAccessible(false);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            System.out.println("Couldn't get field length.");
+            System.out.println(TextMassages.FAILURE_TO_GET_ISLAND_SIZE.getMassage());
             e.printStackTrace();
-        }
-    }
-    private void changeIslandWidth (Object[][] island, int newWidth) {
-        try {
-            Field field = Island.class.getDeclaredField("width");
-            field.setAccessible(true);
-            field.set(island, newWidth);
-            width = (int) field.get(field);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            System.out.println("Couldn't get field width.");
-            e.printStackTrace();
-        }
-    }
+        }*//*
+    }*/
 }

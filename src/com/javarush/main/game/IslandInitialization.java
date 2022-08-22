@@ -5,6 +5,8 @@ import com.javarush.main.services.EntitiesProduction;
 public class IslandInitialization {
 
     public EntitiesProduction entitiesProduction = new EntitiesProduction();
+   //Island island = new Island();
+    //Object[][] islandInstance = island.getInstance();
    /* private static int length = 100;
     private static int width = 20;
     private static Object[][] initializedIsland = new Object[length][width];
@@ -22,10 +24,9 @@ public class IslandInitialization {
     }*/
 
     public Object[][] islandInitialization () {
-        Object[][] island = Island.getInstance();
-        //makeNullEdgesOfIsland(island);
-        setEntitiesOnPosition (island);
-        return island;
+        Object[][] islandInstance = Island.islandInstance;
+        setEntitiesOnPosition (islandInstance);
+        return islandInstance;
     }
 
    /* private Object [][] makeNullEdgesOfIsland (Object[][] island) {
@@ -48,14 +49,13 @@ public class IslandInitialization {
         return island;
     }*/
 
-    private Object [][] setEntitiesOnPosition (Object [][] island) {
-        //makeNullEdgesOfIsland(island);
-        for (int row = 1; row < island.length; row++) {
-            for (int columns = 1; columns < island[row].length; columns++) {
-                island[row][columns] = entitiesProduction.createListOfEntitiesOnPosition();
+    private Object [][] setEntitiesOnPosition (Object [][] islandInstance) {
+        for (int row = 0; row < islandInstance.length; row++) {
+            for (int columns = 0; columns < islandInstance[row].length; columns++) {
+                islandInstance[row][columns] = entitiesProduction.createListOfEntitiesOnPosition();
             }
         }
-        return  island;
+        return  islandInstance;
     }
 }
 
