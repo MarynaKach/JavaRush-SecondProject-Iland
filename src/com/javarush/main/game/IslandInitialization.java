@@ -1,59 +1,32 @@
 package com.javarush.main.game;
 
 import com.javarush.main.services.EntitiesProduction;
+import com.javarush.main.species.abstractclasses.Entity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IslandInitialization {
+    List<List<List<Entity>>> islandInstance = Island.islandInstance;
 
     public EntitiesProduction entitiesProduction = new EntitiesProduction();
-   //Island island = new Island();
-    //Object[][] islandInstance = island.getInstance();
-   /* private static int length = 100;
-    private static int width = 20;
-    private static Object[][] initializedIsland = new Object[length][width];
+   Island island = new Island();
 
-    public Object[][] getInitializedIsland() {
-        return initializedIsland;
-    }
 
-    public int getLength() {
-        return length;
-    }
-
-    public int getWidth() {
-        return width;
-    }*/
-
-    public Object[][] islandInitialization () {
-        Object[][] islandInstance = Island.islandInstance;
+    public List<List<List<Entity>>> islandInitialization () {
         setEntitiesOnPosition (islandInstance);
         return islandInstance;
     }
 
-   /* private Object [][] makeNullEdgesOfIsland (Object[][] island) {
-        for (int row = 0; row < island.length; row++) {
-            for (int columns = 0; columns < island[row].length; columns++) {
-                if (row == 0) {
-                    island[row][columns] = null;
-                }
-                if (columns == 0) {
-                    island[row][columns] = null;
-                }
-                if(columns == island[row].length-1) {
-                    island[row][columns] = null;
-                }
-                if (row == island.length - 1) {
-                    island[row][columns] = null;
-                }
+    private List<List<List<Entity>>> setEntitiesOnPosition (List<List<List<Entity>>>islandInstance) {
+        int islandLength = island.getLength();
+        int islandWidth = island.getWidth();
+        for (int row = 0; row < islandLength; row++) {
+            List<List<Entity>> columnsList = new ArrayList<>();
+            for(int columns = 0; columns < islandWidth; columns++) {
+                columnsList.add(entitiesProduction.createListOfEntitiesOnPosition());
             }
-        }
-        return island;
-    }*/
-
-    private Object [][] setEntitiesOnPosition (Object [][] islandInstance) {
-        for (int row = 0; row < islandInstance.length; row++) {
-            for (int columns = 0; columns < islandInstance[row].length; columns++) {
-                islandInstance[row][columns] = entitiesProduction.createListOfEntitiesOnPosition();
-            }
+            islandInstance.add(columnsList);
         }
         return  islandInstance;
     }

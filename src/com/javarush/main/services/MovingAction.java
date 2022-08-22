@@ -13,9 +13,9 @@ public class MovingAction {
     DirectionsOfMoving directionsOfMoving;
     SupportingMethods supportingMethods = new SupportingMethods();
     EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
-    Object[][] islandInstance = island.getInstance();
-    private int length = Island.length;
-    private int width = Island.width;
+    List<List<List<Entity>>> islandInstance = island.getInstance();
+    private int length = island.getLength();
+    private int width = island.getWidth();
 
     public void makeMove(List<Entity> copyList, Animal animal, int row, int columns) {
         directionsOfMoving = chooseDirection();
@@ -62,7 +62,7 @@ public class MovingAction {
             supportingMethods.changeActionDoneFlag(animal, true);
             return;
         }
-        List<Entity> targetList = (List<Entity>) islandInstance[row][columns + travelSpeed];
+        List<Entity> targetList = islandInstance.get(row).get(columns + travelSpeed);
         int maxNumberOnPosition = supportingMethods.maxNumberOnPosition(animal);
         int countOfSameAnimals = supportingMethods.countNumberOfSameEntityOnPosition(targetList, animal);
         if (countOfSameAnimals < maxNumberOnPosition) {
@@ -78,7 +78,7 @@ public class MovingAction {
             supportingMethods.changeActionDoneFlag(animal, true);
             return;
         }
-        List<Entity> targetList = (List<Entity>) islandInstance[row + travelSpeed][columns];
+        List<Entity> targetList = (List<Entity>) islandInstance.get(row + travelSpeed).get(columns);
         int maxNumberOnPosition = animal.getMaxNumberOnPosition();
         int countOfSameAnimals = supportingMethods.countNumberOfSameEntityOnPosition(targetList, animal);
         if (countOfSameAnimals < maxNumberOnPosition) {

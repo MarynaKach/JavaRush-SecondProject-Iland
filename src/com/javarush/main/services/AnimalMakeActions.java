@@ -16,13 +16,13 @@ public class AnimalMakeActions {
     Actions actions;
     MovingAction movingAction = new MovingAction();
     GrassGrowth grassGrowth = new GrassGrowth();
-    //Island island = new Island();
-    Object[][] islandInstance = Island.islandInstance;
+    Island island = new Island();
+    List<List<List<Entity>>> islandInstance = Island.islandInstance;
 
     public void islandAnimalIteration() {
-        for (int row = 0; row < islandInstance.length; row++) {
-            for (int columns = 0; columns < islandInstance[row].length; columns++) {
-                List<Entity> listOfEntitiesOnPosition = (List<Entity>) islandInstance[row][columns];
+        for (int row = 0; row < island.getLength(); row++) {
+            for (int columns = 0; columns < island.getWidth(); columns++) {
+                List<Entity> listOfEntitiesOnPosition = islandInstance.get(row).get(columns);
                 for (int i = 0; i < listOfEntitiesOnPosition.size(); i++) {
                     List<Entity> copyListOfEntitiesOnPosition = listOfEntitiesOnPosition;
                     Entity entity = copyListOfEntitiesOnPosition.get(i);
@@ -53,10 +53,10 @@ public class AnimalMakeActions {
         }
     }
 
-    private void killingOfHungryAnimal(Object[][] islandInstance) {
-        for (int row = 0; row < islandInstance.length; row++) {
-            for (int columns = 0; columns < islandInstance[row].length; columns++) {
-                List<Entity> listOfEntitiesOnPosition = (List<Entity>) islandInstance[row][columns];
+    private void killingOfHungryAnimal(List<List<List<Entity>>> islandInstance) {
+        for (int row = 0; row < islandInstance.size(); row++) {
+            for (int columns = 0; columns < islandInstance.get(row).size(); columns++) {
+                List<Entity> listOfEntitiesOnPosition = islandInstance.get(row).get(columns);
                 for (int i = 0; i < listOfEntitiesOnPosition.size(); i++) {
                     List<Entity> copyList = listOfEntitiesOnPosition;
                     Entity entity = copyList.get(i);
@@ -75,10 +75,10 @@ public class AnimalMakeActions {
         }
     }
 
-    private void setFalseActionDone(Object[][] islandInstance) {
-        for (int row = 1; row < islandInstance.length; row++) {
-            for (int columns = 1; columns < islandInstance[row].length; columns++) {
-                List<Entity> listOfEntitiesOnPosition = (List<Entity>) islandInstance[row][columns];
+    private void setFalseActionDone(List<List<List<Entity>>> islandInstance) {
+        for (int row = 0; row < islandInstance.size(); row++) {
+            for (int columns = 0; columns < islandInstance.get(row).size(); columns++) {
+                List<Entity> listOfEntitiesOnPosition = islandInstance.get(row).get(columns);
                 for (int i = 0; i < listOfEntitiesOnPosition.size(); i++) {
                     Entity animal = listOfEntitiesOnPosition.get(i);
                     String packageName = animal.getClass().getPackageName();

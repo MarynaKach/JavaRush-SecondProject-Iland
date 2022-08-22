@@ -5,16 +5,16 @@ import com.javarush.main.game.Island;
 import com.javarush.main.game.IslandInitialization;
 import com.javarush.main.services.Statistic;
 
+import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 
 public class ConsoleDialogue {
     Island island = new Island();
-    Object[][] islandInstance = island.getInstance();
     Statistic statistic = new Statistic();
     IslandInitialization islandInitialization = new IslandInitialization();
 
     public void startDialogue() {
-        System.out.printf(TextMassages.VELCOM_MASSAGE.getMassage(), Island.width, Island.length);
+        System.out.printf(TextMassages.VELCOM_MASSAGE.getMassage(), island.getWidth(), island.getLength());
         System.out.println(TextMassages.OPTION_TO_CHANGE_ISLAND_SIZE.getMassage());
         String answerYesOrNo = ScannerSingleton.getInstance().nextLine();
         boolean ifEqualYes = answerYesOrNo.equalsIgnoreCase(TextMassages.ANSWER_YES.getMassage());
@@ -29,8 +29,6 @@ public class ConsoleDialogue {
             chooseNewIslandSize();
             statistic.printStatisticOnStart(islandInitialization.islandInitialization());
         } if(ifEqualNot ) {
-            //Island.setLength(island.getDefaultLength());
-            //Island.setWidth(island.getDefaultWidth());
             statistic.printStatisticOnStart(islandInitialization.islandInitialization());
         }
     }
@@ -49,22 +47,24 @@ public class ConsoleDialogue {
         int newWidth = typeNewIslandSize(TextMassages.TYPE_NEW_WIDTH, Island.minLimitWidth);//typeIslandWidth();
         int newLength = typeNewIslandSize(TextMassages.TYPE_NEW_LENGTH, Island.minLimitLength);//typeIslandLength();
         System.out.printf(TextMassages.NEW_SIZE_OF_ISLAND.getMassage(), newWidth, newLength);
-        island.setLength(newLength);
-        island.setWidth(newWidth);
+        changeIslandSize(island, newLength, "length");
+        changeIslandSize(island, newLength, "width");
     }
 
 
 
-   /* private void changeIslandSize (Object[][] island, int newSize, String fieldName) {
-        Island.setLength();
-        *//*try {
+   private void changeIslandSize (Island island, int newSize, String fieldName) {
+        try {
             Field field = Island.class.getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(island, newSize);
             field.setAccessible(false);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            System.out.println(TextMassages.FAILURE_TO_GET_ISLAND_SIZE.getMassage());
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
-        }*//*
-    }*/
+            System.out.println(TextMassages.FAILURE_TO_GET_ISLAND_SIZE.getMassage());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.out.println(TextMassages.FAILURE_TO_GET_ISLAND_SIZE.getMassage());
+        }
+   }
 }
