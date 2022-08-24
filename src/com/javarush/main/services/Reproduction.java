@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Reproduction {
     EntitiesProduction entitiesProduction = new EntitiesProduction();
+
     public void reproduce(List<Entity> copyList, Animal animal) {
         int maxNumberOnPosition = animal.getMaxNumberOnPosition();
         int numberOfSameAnimalOnPosition = countNumberOfSameEntityOnPosition(copyList, animal);
@@ -23,7 +24,7 @@ public class Reproduction {
 
     private int countNumberOfSameEntityOnPosition(List<Entity> list, Entity entity) {
         int countOfSameEntities = 0;
-        if(entity != null) {
+        if (entity != null) {
             String classNameEntity = entity.getClass().getSimpleName();
             countOfSameEntities = (int) list.stream()
                     .filter(x -> (x.getClass().getSimpleName()).equalsIgnoreCase(classNameEntity))

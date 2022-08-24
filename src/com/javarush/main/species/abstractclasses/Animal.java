@@ -3,7 +3,7 @@ package com.javarush.main.species.abstractclasses;
 import java.util.HashMap;
 
 public abstract class Animal extends Entity {
-   private double weight;
+    private double weight;
     private int maxNumberOnPosition;
     private int maxTravelSpeed;
     private double kgForFullSaturation;

@@ -1,28 +1,31 @@
 package com.javarush.main.game;
 
+import java.util.List;
+
 public class Island {
-    public static int length = 100;
-    public static int width = 15;
-    public static int daysGameLasts = 5;
-    public static int minLimitWidth = 3;
-    public static int minLimitLength = 3;
-    public static Object[][] islandInstance = new Object[length][width];
-    public static double plantGrowthRatio = 0.2;
+    public int length;
+    public int width;
+    public int daysGameLasts;
+    public int minLimitWidth;
+    public int minLimitLength;
+    public Object[][] islandInstance;
+    public double plantGrowthRatio;
 
-    public Island() {
+    public Island(int length, int width, int daysGameLasts, int minLimitWidth, int minLimitLength, double plantGrowthRatio, List[][] islandInstance) {
+        this.length = length;
+        this.width = width;
+        this.daysGameLasts = daysGameLasts;
+        this.minLimitWidth = minLimitWidth;
+        this.minLimitLength = minLimitLength;
+        this.islandInstance = islandInstance;
+        this.plantGrowthRatio = plantGrowthRatio;
     }
 
-    public static void setLength(int length) {
-        Island.length = length;
+    public int getDaysGameLasts() {
+        return daysGameLasts;
     }
 
-    public static void setWidth(int width) {
-        Island.width = width;
-    }
-
-    public Object[][] getInstance() {
+    public Object[][] getIslandInstance() {
         return islandInstance;
     }
-
-
 }

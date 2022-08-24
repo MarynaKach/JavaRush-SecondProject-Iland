@@ -1,12 +1,10 @@
 package com.javarush.main.species.herbivores;
 
-import com.javarush.main.annotations.Herbivores;
 import com.javarush.main.species.abstractclasses.Animal;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
-@Herbivores
 public class Duck extends Animal implements Serializable {
 
     public Duck(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation,

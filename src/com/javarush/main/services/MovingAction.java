@@ -1,34 +1,29 @@
 package com.javarush.main.services;
 
 import com.javarush.main.enums.DirectionsOfMoving;
-import com.javarush.main.enums.TextMassages;
-import com.javarush.main.game.Island;
+import com.javarush.main.enums.TextMessages;
 import com.javarush.main.species.abstractclasses.Animal;
 import com.javarush.main.species.abstractclasses.Entity;
 
 import java.util.List;
 
 public class MovingAction {
-    Island island = new Island();
     DirectionsOfMoving directionsOfMoving;
     SupportingMethods supportingMethods = new SupportingMethods();
     EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
-    Object[][] islandInstance = island.getInstance();
-    private int length = Island.length;
-    private int width = Island.width;
 
-    public void makeMove(List<Entity> copyList, Animal animal, int row, int columns) {
+    public void makeMove(Object[][] islandInstance, List<Entity> copyList, Animal animal, int row, int columns) {
         directionsOfMoving = chooseDirection();
         int travelSpeed = animal.getMaxTravelSpeed();
         if (travelSpeed == 0) {
             return;
         }
         switch (directionsOfMoving) {
-            case NORTH -> moveNorth(copyList, animal, travelSpeed, row, columns);
-            case SOUTH -> moveSouth(copyList, animal, travelSpeed, row, columns);
-            case WEST -> moveWest(copyList, animal, travelSpeed, row, columns);
-            case EAST -> moveEast(copyList, animal, travelSpeed, row, columns);
-            default -> throw new IllegalStateException(TextMassages.NO_CHOOSING_DIRECTION.getMassage());
+            case NORTH -> moveNorth(islandInstance, copyList, animal, travelSpeed, row, columns);
+            case SOUTH -> moveSouth(islandInstance, copyList, animal, travelSpeed, row, columns);
+            case WEST -> moveWest(islandInstance, copyList, animal, travelSpeed, row, columns);
+            case EAST -> moveEast(islandInstance, copyList, animal, travelSpeed, row, columns);
+            default -> throw new IllegalStateException(TextMessages.NO_CHOOSING_DIRECTION.getMassage());
         }
         int saturationRatio = animal.getSaturationRatio();
         animal.setSaturationRatio(saturationRatio - 1);
@@ -38,27 +33,27 @@ public class MovingAction {
         return enumRandomChoice.chooseRandomEnum(DirectionsOfMoving.class);
     }
 
-    private void moveNorth(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
+    private void moveNorth(Object[][] islandInstance, List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         travelSpeed = travelSpeed * -1;
-        moveNorthSouth(copyList, animal, travelSpeed, row, columns);
+        moveNorthSouth(islandInstance, copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveSouth(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
-        moveNorthSouth(copyList, animal, travelSpeed, row, columns);
+    private void moveSouth(Object[][] islandInstance, List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
+        moveNorthSouth(islandInstance, copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveWest(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
+    private void moveWest(Object[][] islandInstance, List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         travelSpeed = travelSpeed * -1;
-        moveWestEast(copyList, animal, travelSpeed, row, columns);
+        moveWestEast(islandInstance, copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveEast(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
-        moveWestEast(copyList, animal, travelSpeed, row, columns);
+    private void moveEast(Object[][] islandInstance, List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
+        moveWestEast(islandInstance, copyList, animal, travelSpeed, row, columns);
     }
 
-    private void moveWestEast(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
+    private void moveWestEast(Object[][] islandInstance, List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         int outOfBoundArray = columns + travelSpeed;
-        if (outOfBoundArray <= 0 || outOfBoundArray >= width) {
+        if (outOfBoundArray <= 0 || outOfBoundArray >= islandInstance[columns].length) {
             supportingMethods.changeActionDoneFlag(animal, true);
             return;
         }
@@ -72,9 +67,9 @@ public class MovingAction {
         }
     }
 
-    private void moveNorthSouth(List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
+    private void moveNorthSouth(Object[][] islandInstance, List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {
         int outOfBoundArray = row + travelSpeed;
-        if (outOfBoundArray <= 0 || outOfBoundArray >= length) {
+        if (outOfBoundArray <= 0 || outOfBoundArray >= islandInstance[row].length) {
             supportingMethods.changeActionDoneFlag(animal, true);
             return;
         }

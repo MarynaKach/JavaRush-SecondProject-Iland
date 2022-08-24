@@ -1,12 +1,10 @@
 package com.javarush.main.species.herbivores;
 
-import com.javarush.main.annotations.Herbivores;
 import com.javarush.main.species.abstractclasses.Animal;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
-@Herbivores
 public class Horse extends Animal implements Serializable {
 
     public Horse(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation,

@@ -2,7 +2,7 @@ package com.javarush.main.services;
 
 import com.javarush.main.enums.AnimalEnum;
 import com.javarush.main.enums.AnimalParametersTypes;
-import com.javarush.main.enums.TextMassages;
+import com.javarush.main.enums.TextMessages;
 import com.javarush.main.species.abstractclasses.Animal;
 import com.javarush.main.species.abstractclasses.Entity;
 
@@ -15,7 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class EntitiesProduction {
     GrassGrowth grassGrowth = new GrassGrowth();
-
 
     public List<Entity> createListOfEntitiesOnPosition() {
         List<Entity> listOfEntitiesOnPosition = new ArrayList<>();
@@ -39,8 +38,6 @@ public class EntitiesProduction {
         return listOfRandomAnimals;
     }
 
-
-
     private void getEatingRatio(HashMap<String, Integer> animalEatingRatio, AnimalEnum whoEat) {
         for(AnimalEnum whomEat : AnimalEnum.values()) {
             PropertiesLoader.getValueOfEatingRatio(animalEatingRatio, whoEat, whomEat, AnimalParametersTypes.POSSIBILITY_TO_EAT);
@@ -58,9 +55,8 @@ public class EntitiesProduction {
     }
 
     protected Entity createNewBornAnimal(Animal animal) {
-        Animal newBornAnimal = null;
         AnimalEnum animalEnum = findAnimalEnum(animal);
-        newBornAnimal = createAnimal(animalEnum);
+        Animal newBornAnimal = createAnimal(animalEnum);
         newBornAnimal.setActionDone(true);
         return newBornAnimal;
     }
@@ -88,7 +84,7 @@ public class EntitiesProduction {
                             animalEatingRatio, saturationRatio);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                 NoSuchMethodException e) {
-            System.out.println(TextMassages.FAILURE_TO_CREATE_INHABITANTS);
+            System.out.println(TextMessages.FAILURE_TO_CREATE_INHABITANTS);
             e.printStackTrace();
         }
         return animal;

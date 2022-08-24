@@ -4,5 +4,4 @@ public enum Actions {
     EAT,
     REPRODUCE,
     MOVE;
-
 }

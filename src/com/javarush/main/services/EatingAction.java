@@ -12,21 +12,25 @@ import java.util.concurrent.ThreadLocalRandom;
 public class EatingAction {
     SupportingMethods supportingMethods = new SupportingMethods();
 
-    protected void eat(List<Entity> copyList, Animal animal, int row, int columns) {
+    protected void eat(List<Entity> copyList, Animal animal) {
         HashMap<String, Integer> eatingRationMap = animal.getEatingRatio();
-        String targetEntity  = findRandomAnimalToEat(copyList, animal, eatingRationMap);
+        String targetEntity = findFoodRandomly(eatingRationMap);
         boolean ifHunterCanEatTarget = ifHunterEatTarget(eatingRationMap, targetEntity);
         if (ifHunterCanEatTarget) {
-            int countOfTargetAnimalToEat = numberOfFoodToEat(copyList, animal, targetEntity);
+            int numberOfTargetAnimalToEat = numberOfTargetFoodToEat(copyList, animal, targetEntity);
             for (int i = 0; i < copyList.size(); i++) {
-                if (targetEntity.getClass().getSimpleName().equalsIgnoreCase(copyList.get(i).getClass().getSimpleName())) {
-                    copyList.remove(copyList.get(i));
-                    countOfTargetAnimalToEat = countOfTargetAnimalToEat - 1;
+                List <Entity> copyOfCopyList = copyList;
+                Entity currentEntityOnPosition = copyOfCopyList.get(i);
+                if (findTargetEntityOnPosition(targetEntity, currentEntityOnPosition)) {
+                    copyList.remove(currentEntityOnPosition);
+                    numberOfTargetAnimalToEat = numberOfTargetAnimalToEat - 1;
+                    i--;
                 }
-                if (countOfTargetAnimalToEat == 0) {
+                if (numberOfTargetAnimalToEat == 0) {
                     i = copyList.size();
                     animal.setActionDone(true);
                 }
+                copyList = copyOfCopyList;
             }
         } else {
             int saturationRation = animal.getSaturationRatio();
@@ -34,11 +38,11 @@ public class EatingAction {
         }
     }
 
-    private String findRandomAnimalToEat (List<Entity> copyList, Animal animal, HashMap<String, Integer> eatingRationMap) {
+    private String findFoodRandomly(HashMap<String, Integer> eatingRationMap) {
         Set<String> entityEatable = eatingRationMap.keySet();
         int size = entityEatable.size();
         int randomPossibilityToEat = 0;
-        String [] entityEatableList = entityEatable.toArray(new String[entityEatable.size()]);
+        String[] entityEatableList = entityEatable.toArray(new String[entityEatable.size()]);
         if (size > 1) {
             randomPossibilityToEat = ThreadLocalRandom.current().nextInt(entityEatableList.length);
         }
@@ -46,7 +50,7 @@ public class EatingAction {
         return targetAnimalName;
     }
 
-    private boolean ifHunterEatTarget (HashMap<String, Integer> eatingRationMap, String targetEntity) {
+    private boolean ifHunterEatTarget(HashMap<String, Integer> eatingRationMap, String targetEntity) {
         boolean ifHunterEatTarget = false;
         int possibilityToEatRatio = eatingRationMap.get(targetEntity);
         int randomPossibilityToEat = ThreadLocalRandom.current().nextInt(possibilityToEatRatio);
@@ -56,37 +60,37 @@ public class EatingAction {
         return ifHunterEatTarget;
     }
 
-    private int numberOfFoodToEat(List<Entity> copyList, Animal animal, String targetEntityName) {
+    private int numberOfTargetFoodToEat(List<Entity> copyList, Animal animal, String targetEntityName) {
         Animal hunterAnimal = animal;
-        int numberOfFoodToEat = 0;
+        int numberOfTargetFoodToEat = 0;
         double kgForFullSaturation = hunterAnimal.getKgForFullSaturation();
-        int numberOfTargetEntityOnPosition = countTotalNumberOfFoodOnPosition(copyList,animal, targetEntityName);
+        int numberOfTargetEntityOnPosition = countTotalNumberOfTargetFoodOnPosition(copyList, targetEntityName);
         Entity targetEntity = findTargetEntityOnPosition(copyList, targetEntityName);
         if (targetEntity != null) {
-            numberOfFoodToEat = howMuchFoodToEat(targetEntity, numberOfTargetEntityOnPosition, kgForFullSaturation);
+            numberOfTargetFoodToEat = howMuchFoodToEat(targetEntity, numberOfTargetEntityOnPosition, kgForFullSaturation);
         }
-        return numberOfFoodToEat;
+        return numberOfTargetFoodToEat;
     }
 
-    private int countTotalNumberOfFoodOnPosition (List<Entity> copyList, Animal animal, String targetEntityName) {
+    private boolean findTargetEntityOnPosition(String targetEntity, Entity currentEntityOnPosition) {
+        return targetEntity.getClass().getSimpleName().equalsIgnoreCase(currentEntityOnPosition.getClass().getSimpleName());
+    }
+
+    private int countTotalNumberOfTargetFoodOnPosition(List<Entity> copyList, String targetEntityName) {
         int numberOfTargetEntityOnPosition = 0;
-        Animal hunterAnimal = animal;
-        //Entity targetEntity = findTargetEntityOnPosition(copyList, targetEntityName);
         for (Entity e : copyList) {
-            if(e.getClass().getSimpleName().equalsIgnoreCase(targetEntityName)) {
+            if (e.getClass().getSimpleName().equalsIgnoreCase(targetEntityName)) {
                 numberOfTargetEntityOnPosition++;
             }
         }
-        /*if (targetEntity == null) {
-            return numberOfTargetEntityOnPosition;
-        }*/
         return numberOfTargetEntityOnPosition;
     }
 
-    private Entity findTargetEntityOnPosition (List<Entity> copyList, String targetEntityName) {
+
+    private Entity findTargetEntityOnPosition(List<Entity> copyList, String targetEntityName) {
         Entity targetEntity = null;
         for (Entity e : copyList) {
-            if(e.getClass().getSimpleName().equalsIgnoreCase(targetEntityName)) {
+            if (e.getClass().getSimpleName().equalsIgnoreCase(targetEntityName)) {
                 targetEntity = e;
                 break;
             }
@@ -94,29 +98,28 @@ public class EatingAction {
         return targetEntity;
     }
 
-    private int howMuchFoodToEat (Entity targetEntity, int numberOfTargetEntityOnPosition, double kgForFullSaturation) {
+    private int howMuchFoodToEat(Entity targetEntity, int numberOfTargetEntityOnPosition, double kgForFullSaturation) {
         int howMuchFoodToEat = 0;
         if (supportingMethods.ifEntityAnimal(targetEntity)) {
             Animal animal = (Animal) targetEntity;
             double weightOfTargetAnimal = animal.getWeight();
-            double totalWeightOfFoodOnPosition = weightOfTargetAnimal*numberOfTargetEntityOnPosition;
+            double totalWeightOfFoodOnPosition = weightOfTargetAnimal * numberOfTargetEntityOnPosition;
             if (totalWeightOfFoodOnPosition < kgForFullSaturation) {
                 howMuchFoodToEat = numberOfTargetEntityOnPosition;
             } else {
-                howMuchFoodToEat = (int) Math.ceil(kgForFullSaturation/weightOfTargetAnimal);
+                howMuchFoodToEat = (int) Math.ceil(kgForFullSaturation / weightOfTargetAnimal);
             }
         }
         if (supportingMethods.ifEntityPlant(targetEntity)) {
             Grass grass = (Grass) targetEntity;
             double grassWeight = grass.getWeight();
-            int totalWeightOfFoodOnPosition = (int) (grassWeight*numberOfTargetEntityOnPosition);
+            int totalWeightOfFoodOnPosition = (int) (grassWeight * numberOfTargetEntityOnPosition);
             if (totalWeightOfFoodOnPosition < kgForFullSaturation) {
                 howMuchFoodToEat = numberOfTargetEntityOnPosition;
             } else {
-                howMuchFoodToEat = (int) Math.ceil(kgForFullSaturation/grassWeight);
+                howMuchFoodToEat = (int) Math.ceil(kgForFullSaturation / grassWeight);
             }
         }
         return howMuchFoodToEat;
     }
-
 }
