@@ -21,6 +21,9 @@ public class IslandInitialization {
     int defaultIslandLength = Integer.parseInt(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.LENGTH.getName()));
 
+    double plantGrowthRatio = Double.parseDouble(PropertiesLoader
+            .properties.getProperty("Island_" + AnimalParametersTypes.PLANT_GROWTH_RATIO.getName()));
+
     public int getDefaultIslandWidth() {
         return defaultIslandWidth;
     }
@@ -37,6 +40,10 @@ public class IslandInitialization {
         return newIslandLandLength;
     }
 
+    public double getPlantGrowthRatio() {
+        return plantGrowthRatio;
+    }
+
     protected Island createIsland(int width, int length) {
         int daysGameLasts = Integer.parseInt(PropertiesLoader
                 .properties.getProperty("Island_" + AnimalParametersTypes.DAYS_GAME_LAST.getName()));
@@ -44,8 +51,8 @@ public class IslandInitialization {
                 .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_WIDTH.getName()));
         int minLimitLength = Integer.parseInt(PropertiesLoader
                 .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_LENGTH.getName()));
-        double plantGrowthRatio = Double.parseDouble(PropertiesLoader
-                .properties.getProperty("Island_" + AnimalParametersTypes.PLANT_GROWTH_RATIO.getName()));
+        /*double plantGrowthRatio = Double.parseDouble(PropertiesLoader
+                .properties.getProperty("Island_" + AnimalParametersTypes.PLANT_GROWTH_RATIO.getName()));*/
         List[][] islandInstance = new List[length][width];
         island = new Island(length, width, daysGameLasts, minLimitWidth, minLimitLength, plantGrowthRatio, islandInstance);
         return island;

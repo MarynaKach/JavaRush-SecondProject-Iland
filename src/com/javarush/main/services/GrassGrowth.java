@@ -1,5 +1,6 @@
 package com.javarush.main.services;
 
+import com.javarush.main.game.IslandInitialization;
 import com.javarush.main.species.abstractclasses.Entity;
 import com.javarush.main.species.plant.Grass;
 
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GrassGrowth {
+    IslandInitialization islandInitialization = new IslandInitialization();
+
 
     protected List<Entity> setGrassOnPosition() {
         List<Entity> randomNumberOfGrass = new ArrayList<>();
@@ -23,11 +26,11 @@ public class GrassGrowth {
         return randomNumberOfGrass;
     }
 
-    protected void letPlantGrowAtNight(List<List<List<Entity>>>islandInstance, String plantName) {
+    protected void letPlantGrowAtNight(Object[][] islandInstance, String plantName) {
         List<Entity> newGrassList = new ArrayList<>();
-        for (int row = 0; row < islandInstance.size(); row++) {
-            for (int columns = 0; columns < islandInstance.get(row).size(); columns++) {
-                List<Entity> listOfEntitiesOnPosition = islandInstance.get(row).get(columns);
+        for (int row = 1; row < islandInstance.length; row++) {
+            for (int columns = 1; columns < islandInstance[row].length; columns++) {
+                List<Entity> listOfEntitiesOnPosition = (List<Entity>) islandInstance[row][columns];
                 long numberOfGrassAtEndOFDay = listOfEntitiesOnPosition.stream()
                         .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(plantName))
                         .count();
@@ -36,14 +39,13 @@ public class GrassGrowth {
                     listOfEntitiesOnPosition.addAll(newGrassList);
                 }
                 if (numberOfGrassAtEndOFDay > 0) {
-                    double plantGrowthRation = 0.2;
+                    double plantGrowthRation = islandInitialization.getPlantGrowthRatio();
                     int grassIncreasingRatio = (int) Math.ceil(numberOfGrassAtEndOFDay * plantGrowthRation);
                     for (int i = 0; i < grassIncreasingRatio; i++) {
                         newGrassList.add(createGrass());
                     }
+                    listOfEntitiesOnPosition.addAll(newGrassList);
                 }
-                listOfEntitiesOnPosition.addAll(newGrassList);
-                newGrassList.clear();
             }
         }
     }
