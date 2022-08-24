@@ -23,11 +23,11 @@ public class GrassGrowth {
         return randomNumberOfGrass;
     }
 
-    protected void letPlantGrowAtNight(Object[][] islandInstance, String plantName) {
+    protected void letPlantGrowAtNight(List<List<List<Entity>>>islandInstance, String plantName) {
         List<Entity> newGrassList = new ArrayList<>();
-        for (int row = 1; row < islandInstance.length; row++) {
-            for (int columns = 1; columns < islandInstance[row].length; columns++) {
-                List<Entity> listOfEntitiesOnPosition = (List<Entity>) islandInstance[row][columns];
+        for (int row = 0; row < islandInstance.size(); row++) {
+            for (int columns = 0; columns < islandInstance.get(row).size(); columns++) {
+                List<Entity> listOfEntitiesOnPosition = islandInstance.get(row).get(columns);
                 long numberOfGrassAtEndOFDay = listOfEntitiesOnPosition.stream()
                         .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(plantName))
                         .count();
