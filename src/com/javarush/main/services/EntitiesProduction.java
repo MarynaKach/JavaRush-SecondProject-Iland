@@ -7,39 +7,37 @@ import com.javarush.main.species.abstractclasses.Animal;
 import com.javarush.main.species.abstractclasses.Entity;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
-
 
 public class EntitiesProduction {
     GrassGrowth grassGrowth = new GrassGrowth();
 
-    public List<Entity> createListOfEntitiesOnPosition() {
-        List<Entity> listOfEntitiesOnPosition = new ArrayList<>();
-        listOfEntitiesOnPosition.clear();
-        listOfEntitiesOnPosition.addAll(createListOfRandomAnimals());
-        listOfEntitiesOnPosition.addAll(grassGrowth.setGrassOnPosition());
-        return listOfEntitiesOnPosition;
+    public CopyOnWriteArrayList<Entity> createListOfEntitiesOnPosition() {
+        CopyOnWriteArrayList<Entity> entitiesOnPosition = new CopyOnWriteArrayList<>();
+        entitiesOnPosition.clear();
+        entitiesOnPosition.addAll(createListOfRandomAnimals());
+        entitiesOnPosition.addAll(grassGrowth.setGrassOnPosition());
+        return entitiesOnPosition;
     }
 
-    private List<Entity> createListOfRandomAnimals() {
-        List<Entity> listOfRandomAnimals = new ArrayList<>();
+    private CopyOnWriteArrayList<Entity> createListOfRandomAnimals() {
+        CopyOnWriteArrayList<Entity> randomAnimals = new CopyOnWriteArrayList<>();
         for (AnimalEnum animalEnum : AnimalEnum.values()) {
             String entityName = animalEnum.getName();
             if (!(entityName.contains("Grass"))) {
                 for (int i = 0; i < getRandomMaxNumberOnPosition(animalEnum); i++) {
                     Animal animal = createAnimal(animalEnum);
-                    listOfRandomAnimals.add(animal);
+                    randomAnimals.add(animal);
                 }
             }
         }
-        return listOfRandomAnimals;
+        return randomAnimals;
     }
 
     private void getEatingRatio(HashMap<String, Integer> animalEatingRatio, AnimalEnum whoEat) {
-        for(AnimalEnum whomEat : AnimalEnum.values()) {
+        for (AnimalEnum whomEat : AnimalEnum.values()) {
             PropertiesLoader.getValueOfEatingRatio(animalEatingRatio, whoEat, whomEat, AnimalParametersTypes.POSSIBILITY_TO_EAT);
         }
     }
@@ -48,7 +46,7 @@ public class EntitiesProduction {
         AnimalEnum animalEnumName = null;
         for (AnimalEnum animalEnum : AnimalEnum.values()) {
             if (animalEnum.getClazz() == animal.getClass()) {
-                animalEnumName =   animalEnum;
+                animalEnumName = animalEnum;
             }
         }
         return animalEnumName;
@@ -61,7 +59,7 @@ public class EntitiesProduction {
         return newBornAnimal;
     }
 
-    private Animal createAnimal (AnimalEnum animalEnum) {
+    private Animal createAnimal(AnimalEnum animalEnum) {
         Animal animal = null;
         double weight = Double.parseDouble(PropertiesLoader
                 .getAnimalProperties(animalEnum, AnimalParametersTypes.WEIGHT));
@@ -90,7 +88,7 @@ public class EntitiesProduction {
         return animal;
     }
 
-    private int getRandomMaxNumberOnPosition (AnimalEnum animalEnum) {
+    private int getRandomMaxNumberOnPosition(AnimalEnum animalEnum) {
         int maxNumberOnPosition = Integer.parseInt(PropertiesLoader
                 .getAnimalProperties(animalEnum, AnimalParametersTypes.MAX_NUMBER_ON_POSITION), 10);
         return ThreadLocalRandom.current().nextInt(maxNumberOnPosition);

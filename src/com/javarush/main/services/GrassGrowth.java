@@ -4,16 +4,36 @@ import com.javarush.main.game.IslandInitialization;
 import com.javarush.main.species.abstractclasses.Entity;
 import com.javarush.main.species.plant.Grass;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GrassGrowth {
-    IslandInitialization islandInitialization = new IslandInitialization();
 
+    public void letPlantGrowAtNight(Object[][] islandInstance, String plantName, int row, int columns) {
+        CopyOnWriteArrayList<Entity> newGrassList = new CopyOnWriteArrayList<>();
+        List<Entity> entitiesOnPosition = (List<Entity>) islandInstance[row][columns];
+        long numberOfGrassAtEndOFDay = entitiesOnPosition.stream()
+                .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(plantName))
+                .count();
+        if (numberOfGrassAtEndOFDay == 0) {
+            newGrassList = setGrassOnPosition();
+            entitiesOnPosition.addAll(newGrassList);
+        }
+        if (numberOfGrassAtEndOFDay > 0) {
+            IslandInitialization islandInitialization = new IslandInitialization();
+            double plantGrowthRation = islandInitialization.getPlantGrowthRatio();
+            int grassIncreasingRatio = (int) Math.ceil(numberOfGrassAtEndOFDay * plantGrowthRation);
+            for (int i = 0; i < grassIncreasingRatio; i++) {
+                newGrassList.add(createGrass());
+            }
+            entitiesOnPosition.addAll(newGrassList);
+        }
+        newGrassList.clear();
+    }
 
-    protected List<Entity> setGrassOnPosition() {
-        List<Entity> randomNumberOfGrass = new ArrayList<>();
+    protected CopyOnWriteArrayList<Entity> setGrassOnPosition() {
+        CopyOnWriteArrayList<Entity> randomNumberOfGrass = new CopyOnWriteArrayList<>();
         randomNumberOfGrass.clear();
         Grass grass = createGrass();
         int maxNumberOfGrass = grass.getMaxNumberOnPosition();
@@ -24,30 +44,6 @@ public class GrassGrowth {
             setGrassOnPosition();
         }
         return randomNumberOfGrass;
-    }
-
-    protected void letPlantGrowAtNight(Object[][] islandInstance, String plantName) {
-        List<Entity> newGrassList = new ArrayList<>();
-        for (int row = 1; row < islandInstance.length; row++) {
-            for (int columns = 1; columns < islandInstance[row].length; columns++) {
-                List<Entity> listOfEntitiesOnPosition = (List<Entity>) islandInstance[row][columns];
-                long numberOfGrassAtEndOFDay = listOfEntitiesOnPosition.stream()
-                        .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(plantName))
-                        .count();
-                if (numberOfGrassAtEndOFDay == 0) {
-                    newGrassList = setGrassOnPosition();
-                    listOfEntitiesOnPosition.addAll(newGrassList);
-                }
-                if (numberOfGrassAtEndOFDay > 0) {
-                    double plantGrowthRation = islandInitialization.getPlantGrowthRatio();
-                    int grassIncreasingRatio = (int) Math.ceil(numberOfGrassAtEndOFDay * plantGrowthRation);
-                    for (int i = 0; i < grassIncreasingRatio; i++) {
-                        newGrassList.add(createGrass());
-                    }
-                    listOfEntitiesOnPosition.addAll(newGrassList);
-                }
-            }
-        }
     }
 
     private Grass createGrass() {

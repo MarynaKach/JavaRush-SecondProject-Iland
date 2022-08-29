@@ -1,5 +1,6 @@
 package com.javarush.main.game;
 
+import com.javarush.main.consoleui.ConsoleDialogue;
 import com.javarush.main.consoleui.ScannerSingleton;
 import com.javarush.main.enums.AnimalParametersTypes;
 import com.javarush.main.enums.TextMessages;
@@ -44,6 +45,26 @@ public class IslandInitialization {
         return plantGrowthRatio;
     }
 
+    protected Island createIslandWIthSpecifiedSize () {
+        ConsoleDialogue consoleDialogue = new ConsoleDialogue();
+        boolean ifChangeIslandSize = consoleDialogue.startDialogue();
+        IslandInitialization islandInitialization = new IslandInitialization();
+        if (ifChangeIslandSize) {
+            islandInitialization.chooseNewIslandSize();
+            islandInitialization.getNewIslandLandLength();
+            islandInitialization.getNewIslandLandWidth();
+            int newIslandWidth = islandInitialization.getNewIslandLandWidth();
+            int newIslandLength = islandInitialization.getNewIslandLandLength();
+            island = islandInitialization.createIsland(newIslandWidth, newIslandLength);
+        } else {
+            int defaultIslandWidth = islandInitialization.getDefaultIslandWidth();
+            int defaultIslandLength = islandInitialization.getDefaultIslandLength();
+            island = islandInitialization
+                    .createIsland(defaultIslandWidth, defaultIslandLength);
+        }
+    return island;
+    }
+
     protected Island createIsland(int width, int length) {
         int daysGameLasts = Integer.parseInt(PropertiesLoader
                 .properties.getProperty("Island_" + AnimalParametersTypes.DAYS_GAME_LAST.getName()));
@@ -51,8 +72,6 @@ public class IslandInitialization {
                 .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_WIDTH.getName()));
         int minLimitLength = Integer.parseInt(PropertiesLoader
                 .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_LENGTH.getName()));
-        /*double plantGrowthRatio = Double.parseDouble(PropertiesLoader
-                .properties.getProperty("Island_" + AnimalParametersTypes.PLANT_GROWTH_RATIO.getName()));*/
         List[][] islandInstance = new List[length][width];
         island = new Island(length, width, daysGameLasts, minLimitWidth, minLimitLength, plantGrowthRatio, islandInstance);
         return island;

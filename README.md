@@ -4,11 +4,11 @@
 Short Description
 -----------------
 
-Console application for simulation of wild life on the Island. The default size of Island is 100 cells length and 20 width.
-The User may change the size of the Island. The Island is displaced by Entities: Animals and Plant. Animals are able to 
-move, eat, reproduce, die form hunger or to be killed by the predator, grass grows every night. Animal may do only one 
-action during the day. Random choice decides what action Animal will do today. At the end of each day the statistic is 
-printed in console. The statistic includes: number of predators, herbivores and grass.
+Console multithreading application for simulation of wild life on the Island. The default size of Island is 100 cells 
+length and 20 width.The User may change the size of the Island. The Island is displaced by Entities: Animals and Plant. 
+Animals are able to move, eat, reproduce, die form hunger or to be killed by the predator, grass grows every night. 
+Animal may do only one action during the day. Random choice decides what action Animal will do today. At the end of each
+day the statistic is printed in console. The statistic includes: number of predators, herbivores and grass.
 
 
 Limitations in application
@@ -40,12 +40,12 @@ that suppose to be dead according to limitation above are removed from the Islan
 Packages and Class description 
 ------------------------------
 
-In root package there tow packages: main and resource. Package resource contains file game.properties. There are all 
+In root package there are tow packages: main and resource. Package resource contains file game.properties. There are all 
 parameters of Animals, Grass and Island in this file. Package main contains packages: consoleui, enums, game, service,
 species.
 Consoleui package contains two classes: 
         - ConsoleDialogue, for communications with User,
-        -cScannerSingletone, for typing and reading information from User. 
+        -ScannerSingleton, for typing and reading information from User. 
 Enums contains 5 enums: 
         - Actions(enumeration of action that Animal are able to do), 
         - AnimalEnum (enumeration of type of Animals), 
@@ -63,7 +63,7 @@ Services contain classes:
         - EntityProduction (it produces entities, and newborn Animals), 
         - EnumRandomChoice (supply random choice for each enumeration), 
         - GrassGrows (the grass grows here), 
-        - IslandEntityIteration (here cells of Island are iterated, Animals in each cell are iterated, they choose their 
+        - IslandEntityIterationRunnable (here cells of Island are iterated, Animals in each cell are iterated, they choose their 
         actions, grass grows at the night and dead Animals are removed), 
         - MovingAction (here Animals move), 
         - PropertiesLoader (load properties from game.properties file at the start of the simulation), 
@@ -90,21 +90,23 @@ Description of the course of simulation
 
 1. The simulation starts in class GameApplication, it contains main method in which the simulation is started.
 2. The properties are loaded at the start.
-3. The User see welcome message with the default size of the Island, length 100 cells, width 20 cells. He is suggested 
-to change the size of the Island. It is allowed to enter "yes" or "not" only. If "not" goes to para 3. If yes, the User 
-is suggested to enter the new width and the new length. The User is allowed to enter numbers only starting from 3. 
-4. The Island created with default size or with User desired size. 
-5. The Animals and Grass are settled on the Island. Entities created with reflection in the random amount from zero to
-maximum amount of such type of Entity per one cell. 
-6. The statistic is printed.
-7. For each Animal on each position (cell) random chooses action.
-8. If action move: random chooses the direction for animal, check travel speed of animal. If it is zero, the 
+3. The User see welcome message with the default size of the Island, length 100 cells, width 20 cells. The User is 
+suggested to change the size of the Island. It is allowed to enter "yes" or "not" only. If "not" goes to para 3. If yes, 
+the User is suggested to enter the new width and the new length. The User is allowed to enter numbers only starting 
+from 3. 
+4. The Island created with default size or with User inserted size. 
+5. The Animals and Grass are settled on the Island. Entities created by means of reflection in the random amount from 
+zero to maximum amount of such type of Entity per one cell. 
+6. The statistic on the beginning of the simulation is printed.
+7. For each cell the thread is created and paragraphs 8 - 14 are executed in its own thread.
+8. For each Animal on each position (cell) random chooses action.
+9. If action move: random chooses the direction for animal, check travel speed of animal. If it is zero, the 
 actionDoneFlag of animal becomes true, animal stays on its position. If it is above zero: check the amount of the same 
 animal on chosen position. If it is higher or equal to maximum allowed amount of such animal, the actionDoneFlag of 
 animal becomes true, animal stays on its position. If it is lower than such amount: animal is removed from its current 
 position and added to new position the actionDoneFlag of animal becomes true. The field saturationRation, which shows if
 animal ate today decreased in 1. 
-9. If action eat: random chooses the target entity to eat from HashMap eatingRation, it includes list of target food 
+10. If action eat: random chooses the target entity to eat from HashMap eatingRation, it includes list of target food 
 with possibility to eat ratio. Random chooses if hunting animal will eat the target food according to possibility to eat
 ratio. If not: actionDoneFlag of animal becomes true, animal stays hungry, its saturation ratio decreased in 1. If yes:
 check if such Entity (animal or grass) are on current position of hunting Animal. Count the weight of the total number 
@@ -112,13 +114,14 @@ of target entities, compare to number of kg for the full saturation of hunting a
 Animal to eat, and number of Grass to each. Remove this number of target animal or grass from current position.
 If the weight of total food that ate the animal is twice lower that its parameter kgForFullSaturation, it is considered 
 that hunting animal didn't eat at all, its saturation ratio decreased in 1 anyway.
-10. If action reproduce: check if the number of animal of the same type on current position higher or equal to 
+11. If action reproduce: check if the number of animal of the same type on current position higher or equal to 
 maximum allowed amount of such animal, the actionDoneFlag of animal becomes true, animal doesn't do action. if not: 
 one animal of such type is added to the current position, the actionDoneFlag of animal becomes true, its saturation ratio 
 decreased in 1.
-11. For each position for each animal the actionDoneFlag becomes false.
-12. For each position if there is no grass on it, the grass grows in random number, if there is grass on position it is
+12. For each position for each animal the actionDoneFlag becomes false.
+13. For each position if there is no grass on it, the grass grows in random number, if there is grass on position it is
 increased in 20 percent. 
-13. If the saturation ratio is 0 the animal is removed from its position. 
-14. Paragraphs 6-13 start again.
+14. If the saturation ratio is 0 the animal is removed from its position. 
+15. The statistic of the beginning of the day is printed. 
+16. Paragraphs 7-15 start again.
  

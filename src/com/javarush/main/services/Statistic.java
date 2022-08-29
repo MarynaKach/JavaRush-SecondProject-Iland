@@ -35,6 +35,5 @@ public class Statistic {
             }
         }
         System.out.println(textMassages.getMassage() + numberOfEntity);
-
     }
 }

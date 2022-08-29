@@ -11,7 +11,7 @@ public class ConsoleDialogue {
             .properties.getProperty("Island_" + AnimalParametersTypes.LENGTH.getName()));
 
     public boolean startDialogue() {
-        System.out.printf(TextMessages.VELCOM_MASSAGE.getMassage(), defaultIslandWidth, defaultIslandLength);
+        System.out.printf(TextMessages.WELCOME_MASSAGE.getMassage(), defaultIslandWidth, defaultIslandLength);
         System.out.println(TextMessages.OPTION_TO_CHANGE_ISLAND_SIZE.getMassage());
         String answerYesOrNo = ScannerSingleton.getInstance().nextLine();
         boolean ifEqualYes = checkIfAnswerYesOrNot(answerYesOrNo, TextMessages.ANSWER_YES);

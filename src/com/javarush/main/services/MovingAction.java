@@ -6,6 +6,7 @@ import com.javarush.main.species.abstractclasses.Animal;
 import com.javarush.main.species.abstractclasses.Entity;
 
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MovingAction {
     DirectionsOfMoving directionsOfMoving;
@@ -57,7 +58,9 @@ public class MovingAction {
             supportingMethods.changeActionDoneFlag(animal, true);
             return;
         }
-        List<Entity> targetList = (List<Entity>) islandInstance[row][columns + travelSpeed];
+        ReentrantLock reentrantLock = new ReentrantLock();
+        reentrantLock.lock();
+                List<Entity> targetList = (List<Entity>) islandInstance[row][columns + travelSpeed];
         int maxNumberOnPosition = supportingMethods.maxNumberOnPosition(animal);
         int countOfSameAnimals = supportingMethods.countNumberOfSameEntityOnPosition(targetList, animal);
         if (countOfSameAnimals < maxNumberOnPosition) {
@@ -65,6 +68,7 @@ public class MovingAction {
             supportingMethods.changeActionDoneFlag(animal, true);
             targetList.add(animal);
         }
+        reentrantLock.unlock();
     }
 
     private void moveNorthSouth(Object[][] islandInstance, List<Entity> copyList, Animal animal, int travelSpeed, int row, int columns) {

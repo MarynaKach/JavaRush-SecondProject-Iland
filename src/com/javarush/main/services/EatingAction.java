@@ -7,19 +7,20 @@ import com.javarush.main.species.plant.Grass;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EatingAction {
     SupportingMethods supportingMethods = new SupportingMethods();
 
-    protected void eat(List<Entity> copyList, Animal animal) {
+    protected void eat(CopyOnWriteArrayList<Entity> copyList, Animal animal) {
         HashMap<String, Integer> eatingRationMap = animal.getEatingRatio();
         String targetEntity = findFoodRandomly(eatingRationMap);
         boolean ifHunterCanEatTarget = ifHunterEatTarget(eatingRationMap, targetEntity);
         if (ifHunterCanEatTarget) {
             int numberOfTargetAnimalToEat = numberOfTargetFoodToEat(copyList, animal, targetEntity);
             for (int i = 0; i < copyList.size(); i++) {
-                List <Entity> copyOfCopyList = copyList;
+                CopyOnWriteArrayList<Entity> copyOfCopyList = copyList;
                 Entity currentEntityOnPosition = copyOfCopyList.get(i);
                 if (findTargetEntityOnPosition(targetEntity, currentEntityOnPosition)) {
                     copyList.remove(currentEntityOnPosition);
@@ -51,13 +52,9 @@ public class EatingAction {
     }
 
     private boolean ifHunterEatTarget(HashMap<String, Integer> eatingRationMap, String targetEntity) {
-        boolean ifHunterEatTarget = false;
         int possibilityToEatRatio = eatingRationMap.get(targetEntity);
         int randomPossibilityToEat = ThreadLocalRandom.current().nextInt(possibilityToEatRatio);
-        if (randomPossibilityToEat < possibilityToEatRatio) {
-            ifHunterEatTarget = true;
-        }
-        return ifHunterEatTarget;
+        return randomPossibilityToEat < possibilityToEatRatio;
     }
 
     private int numberOfTargetFoodToEat(List<Entity> copyList, Animal animal, String targetEntityName) {
@@ -73,7 +70,7 @@ public class EatingAction {
     }
 
     private boolean findTargetEntityOnPosition(String targetEntity, Entity currentEntityOnPosition) {
-        return targetEntity.getClass().getSimpleName().equalsIgnoreCase(currentEntityOnPosition.getClass().getSimpleName());
+        return targetEntity.equalsIgnoreCase(currentEntityOnPosition.getClass().getSimpleName());
     }
 
     private int countTotalNumberOfTargetFoodOnPosition(List<Entity> copyList, String targetEntityName) {
@@ -85,7 +82,6 @@ public class EatingAction {
         }
         return numberOfTargetEntityOnPosition;
     }
-
 
     private Entity findTargetEntityOnPosition(List<Entity> copyList, String targetEntityName) {
         Entity targetEntity = null;

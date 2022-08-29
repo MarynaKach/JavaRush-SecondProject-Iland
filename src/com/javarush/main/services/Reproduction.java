@@ -24,11 +24,14 @@ public class Reproduction {
 
     private int countNumberOfSameEntityOnPosition(List<Entity> list, Entity entity) {
         int countOfSameEntities = 0;
-        if (entity != null) {
-            String classNameEntity = entity.getClass().getSimpleName();
-            countOfSameEntities = (int) list.stream()
-                    .filter(x -> (x.getClass().getSimpleName()).equalsIgnoreCase(classNameEntity))
-                    .count();
+        List<Entity> list1 = list;
+        synchronized (list1) {
+            if (entity != null) {
+                String classNameEntity = entity.getClass().getSimpleName();
+                countOfSameEntities = (int) list1.stream()
+                        .filter(x -> (x.getClass().getSimpleName()).equalsIgnoreCase(classNameEntity))
+                        .count();
+            }
         }
         return countOfSameEntities;
     }
