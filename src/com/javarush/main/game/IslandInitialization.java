@@ -51,8 +51,6 @@ public class IslandInitialization {
         IslandInitialization islandInitialization = new IslandInitialization();
         if (ifChangeIslandSize) {
             islandInitialization.chooseNewIslandSize();
-            islandInitialization.getNewIslandLandLength();
-            islandInitialization.getNewIslandLandWidth();
             int newIslandWidth = islandInitialization.getNewIslandLandWidth();
             int newIslandLength = islandInitialization.getNewIslandLandLength();
             island = islandInitialization.createIsland(newIslandWidth, newIslandLength);
@@ -72,7 +70,7 @@ public class IslandInitialization {
                 .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_WIDTH.getName()));
         int minLimitLength = Integer.parseInt(PropertiesLoader
                 .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_LENGTH.getName()));
-        List[][] islandInstance = new List[length][width];
+        Object[][] islandInstance = new List[length][width];
         island = new Island(length, width, daysGameLasts, minLimitWidth, minLimitLength, plantGrowthRatio, islandInstance);
         return island;
     }

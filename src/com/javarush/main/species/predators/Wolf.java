@@ -2,10 +2,9 @@ package com.javarush.main.species.predators;
 
 import com.javarush.main.species.abstractclasses.Animal;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
-public class Wolf extends Animal implements Serializable {
+public class Wolf extends Animal {
 
     public Wolf(double weight, int maxNumberOnPosition, int maxTravelSpeed, double kgForFullSaturation,
                 boolean isActionDone, HashMap<String, Integer> eatingRation, int saturationRatio) {

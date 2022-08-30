@@ -16,7 +16,8 @@ public enum TextMessages {
     ANSWER_YES("Yes"),
     ANSWER_NOT("Not"),
     TYPE_NEW_LENGTH("Please, type new length starting from  %d.\n"),
-    TYPE_NEW_WIDTH("Please, type new width starting from %d.\n");
+    TYPE_NEW_WIDTH("Please, type new width starting from %d.\n"),
+    FAILURE_TO_JOIN_THREAD ("Main thread failed to join other threads.");
 
     private String massage;
 

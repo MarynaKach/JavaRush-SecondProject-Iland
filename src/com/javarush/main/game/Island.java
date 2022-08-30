@@ -1,7 +1,5 @@
 package com.javarush.main.game;
 
-import java.util.List;
-
 public class Island {
     public int length;
     public int width;
@@ -11,7 +9,7 @@ public class Island {
     public Object[][] islandInstance;
     public double plantGrowthRatio;
 
-    public Island(int length, int width, int daysGameLasts, int minLimitWidth, int minLimitLength, double plantGrowthRatio, List[][] islandInstance) {
+    public Island(int length, int width, int daysGameLasts, int minLimitWidth, int minLimitLength, double plantGrowthRatio, Object[][] islandInstance) {
         this.length = length;
         this.width = width;
         this.daysGameLasts = daysGameLasts;

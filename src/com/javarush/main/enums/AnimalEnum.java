@@ -6,6 +6,7 @@ import com.javarush.main.species.predators.Boa;
 import com.javarush.main.species.predators.Eagle;
 import com.javarush.main.species.predators.Fox;
 import com.javarush.main.species.predators.Wolf;
+import com.javarush.main.species.predators.Bear;
 
 public enum AnimalEnum {
     BOAR("Boar", Boar.class),
@@ -18,7 +19,7 @@ public enum AnimalEnum {
     MOUSE("Mouse", Mouse.class),
     RABBIT("Rabbit", Rabbit.class),
     SHIP("Ship", Ship.class),
-    BEAR("Bear", Boar.class),
+    BEAR("Bear", Bear.class),
     BOA("Boa", Boa.class),
     EAGLE("Eagle", Eagle.class),
     FOX("Fox", Fox.class),

@@ -5,7 +5,6 @@ import com.javarush.main.species.abstractclasses.Entity;
 import com.javarush.main.species.plant.Grass;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,8 +19,7 @@ public class EatingAction {
         if (ifHunterCanEatTarget) {
             int numberOfTargetAnimalToEat = numberOfTargetFoodToEat(copyList, animal, targetEntity);
             for (int i = 0; i < copyList.size(); i++) {
-                CopyOnWriteArrayList<Entity> copyOfCopyList = copyList;
-                Entity currentEntityOnPosition = copyOfCopyList.get(i);
+                Entity currentEntityOnPosition = copyList.get(i);
                 if (findTargetEntityOnPosition(targetEntity, currentEntityOnPosition)) {
                     copyList.remove(currentEntityOnPosition);
                     numberOfTargetAnimalToEat = numberOfTargetAnimalToEat - 1;
@@ -31,7 +29,6 @@ public class EatingAction {
                     i = copyList.size();
                     animal.setActionDone(true);
                 }
-                copyList = copyOfCopyList;
             }
         } else {
             int saturationRation = animal.getSaturationRatio();
@@ -47,8 +44,7 @@ public class EatingAction {
         if (size > 1) {
             randomPossibilityToEat = ThreadLocalRandom.current().nextInt(entityEatableList.length);
         }
-        String targetAnimalName = entityEatableList[randomPossibilityToEat];
-        return targetAnimalName;
+        return entityEatableList[randomPossibilityToEat];
     }
 
     private boolean ifHunterEatTarget(HashMap<String, Integer> eatingRationMap, String targetEntity) {
@@ -57,12 +53,11 @@ public class EatingAction {
         return randomPossibilityToEat < possibilityToEatRatio;
     }
 
-    private int numberOfTargetFoodToEat(List<Entity> copyList, Animal animal, String targetEntityName) {
-        Animal hunterAnimal = animal;
+    private int numberOfTargetFoodToEat(CopyOnWriteArrayList<Entity> entitiesOnPosition, Animal animal, String targetEntityName) {
         int numberOfTargetFoodToEat = 0;
-        double kgForFullSaturation = hunterAnimal.getKgForFullSaturation();
-        int numberOfTargetEntityOnPosition = countTotalNumberOfTargetFoodOnPosition(copyList, targetEntityName);
-        Entity targetEntity = findTargetEntityOnPosition(copyList, targetEntityName);
+        double kgForFullSaturation = animal.getKgForFullSaturation();
+        int numberOfTargetEntityOnPosition = countTotalNumberOfTargetFoodOnPosition(entitiesOnPosition, targetEntityName);
+        Entity targetEntity = findTargetEntityOnPosition(entitiesOnPosition, targetEntityName);
         if (targetEntity != null) {
             numberOfTargetFoodToEat = howMuchFoodToEat(targetEntity, numberOfTargetEntityOnPosition, kgForFullSaturation);
         }
@@ -73,9 +68,9 @@ public class EatingAction {
         return targetEntity.equalsIgnoreCase(currentEntityOnPosition.getClass().getSimpleName());
     }
 
-    private int countTotalNumberOfTargetFoodOnPosition(List<Entity> copyList, String targetEntityName) {
+    private int countTotalNumberOfTargetFoodOnPosition(CopyOnWriteArrayList<Entity> entitiesOnPosition, String targetEntityName) {
         int numberOfTargetEntityOnPosition = 0;
-        for (Entity e : copyList) {
+        for (Entity e : entitiesOnPosition) {
             if (e.getClass().getSimpleName().equalsIgnoreCase(targetEntityName)) {
                 numberOfTargetEntityOnPosition++;
             }
@@ -83,9 +78,9 @@ public class EatingAction {
         return numberOfTargetEntityOnPosition;
     }
 
-    private Entity findTargetEntityOnPosition(List<Entity> copyList, String targetEntityName) {
+    private Entity findTargetEntityOnPosition(CopyOnWriteArrayList<Entity> entitiesOnPosition, String targetEntityName) {
         Entity targetEntity = null;
-        for (Entity e : copyList) {
+        for (Entity e : entitiesOnPosition) {
             if (e.getClass().getSimpleName().equalsIgnoreCase(targetEntityName)) {
                 targetEntity = e;
                 break;

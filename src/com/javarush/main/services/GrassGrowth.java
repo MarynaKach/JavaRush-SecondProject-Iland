@@ -4,7 +4,6 @@ import com.javarush.main.game.IslandInitialization;
 import com.javarush.main.species.abstractclasses.Entity;
 import com.javarush.main.species.plant.Grass;
 
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -12,7 +11,7 @@ public class GrassGrowth {
 
     public void letPlantGrowAtNight(Object[][] islandInstance, String plantName, int row, int columns) {
         CopyOnWriteArrayList<Entity> newGrassList = new CopyOnWriteArrayList<>();
-        List<Entity> entitiesOnPosition = (List<Entity>) islandInstance[row][columns];
+        CopyOnWriteArrayList<Entity> entitiesOnPosition = (CopyOnWriteArrayList<Entity>) islandInstance[row][columns];
         long numberOfGrassAtEndOFDay = entitiesOnPosition.stream()
                 .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(plantName))
                 .count();

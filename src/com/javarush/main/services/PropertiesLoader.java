@@ -4,7 +4,6 @@ import com.javarush.main.enums.AnimalEnum;
 import com.javarush.main.enums.AnimalParametersTypes;
 import com.javarush.main.enums.TextMessages;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -15,7 +14,7 @@ public class PropertiesLoader {
 
     public void loadProperties() {
         try {
-            InputStream input = new FileInputStream("src/com/javarush/resource/settings/game.properties");
+            InputStream input = ClassLoader.getSystemResourceAsStream("game.properties");
             properties = new Properties();
             properties.load(input);
         } catch (IOException ex) {

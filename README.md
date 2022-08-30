@@ -57,7 +57,9 @@ Game contains the following classes:
         - GameApplication (the game starts here, main method), 
         - God ("God" of the Island, it manages all actions of Animals and Grass), 
         - Island (class with parameters of Island), 
-        - IslandInitialization (class which creates Island and settled the Entities on it). 
+        - IslandInitialization (class which creates Island and settled the Entities on it).
+Resource package contains:
+        - game.properties file
 Services contain classes: 
         - EatingAction (here Animals eat), 
         - EntityProduction (it produces entities, and newborn Animals), 
@@ -82,8 +84,6 @@ Species contains four packages:
         - Grass
     - predators contains five classes which extends from Animal:
         - Bear, Boa, Eagle, Fox, Wolf.
-Resource package contains package settings in which there is:
-        - game.properties file.
 
 Description of the course of simulation
 ---------------------------------------

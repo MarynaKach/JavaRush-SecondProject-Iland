@@ -6,6 +6,7 @@ import com.javarush.main.species.plant.Grass;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Phaser;
 
 public class SupportingMethods {
@@ -15,7 +16,7 @@ public class SupportingMethods {
     }
 
     protected int maxNumberOnPosition(Entity entity) {
-        int maxNumberOnPosition = 0;
+        int maxNumberOnPosition;
         String getPackageName = entity.getClass().getPackageName();
         if (!(getPackageName.contains("Grass"))) {
             Animal animalTemp = (Animal) entity;
@@ -27,12 +28,11 @@ public class SupportingMethods {
         return maxNumberOnPosition;
     }
 
-    protected int countNumberOfSameEntityOnPosition(List<Entity> list, Entity entity) {
-        List<Entity> list1 = list;
+    protected int countNumberOfSameEntityOnPosition(CopyOnWriteArrayList<Entity> entitiesOnPosition, Entity entity) {
         int countOfSameEntities = 0;
         if (entity != null) {
             String classNameEntity = entity.getClass().getSimpleName();
-            countOfSameEntities = (int) list1.stream()
+            countOfSameEntities = (int) entitiesOnPosition.stream()
                     .filter(x -> (x.getClass().getSimpleName()).equalsIgnoreCase(classNameEntity))
                     .count();
         }
@@ -41,17 +41,15 @@ public class SupportingMethods {
 
     protected boolean ifEntityAnimal(Entity targetEntity) {
         String packageName = targetEntity.getClass().getPackageName();
-        boolean ifEntityAnimal = !(packageName.contains("plant"));
-        return ifEntityAnimal;
+        return !(packageName.contains("plant"));
     }
 
     protected boolean ifEntityPlant(Entity targetEntity) {
         String packageName = targetEntity.getClass().getPackageName();
-        boolean ifEntityAnimal = packageName.contains("plant");
-        return ifEntityAnimal;
+        return packageName.contains("plant");
     }
 
-    public List<Runnable> getListOfTasksFirst(Phaser phaser, Object[][] islandInstance) {
+    public List<Runnable> getThreadTaskPerPosition(Phaser phaser, Object[][] islandInstance) {
         List<Runnable> listOfTasks = new ArrayList<>();
         for (int row = 0; row < islandInstance.length; row++) {
             for (int columns = 0; columns < islandInstance[row].length; columns++) {
