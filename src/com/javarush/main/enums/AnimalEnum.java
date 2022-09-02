@@ -28,6 +28,7 @@ public enum AnimalEnum {
 
     String name;
     Class clazz;
+    String emoji ;
 
     AnimalEnum(String name, Class clazz) {
         this.name = name;

@@ -11,8 +11,15 @@ public class Reproduction {
     public void reproduce(CopyOnWriteArrayList<Entity> entitiesOnPosition, Animal animal) {
         int maxNumberOnPosition = animal.getMaxNumberOnPosition();
         int numberOfSameAnimalOnPosition = countNumberOfSameEntityOnPosition(entitiesOnPosition, animal);
+        Animal partnerAnimal = null;
+        for (Entity entity : entitiesOnPosition) {
+            if(entity.getClass().getSimpleName().equalsIgnoreCase(animal.getClass().getSimpleName())){
+                partnerAnimal = (Animal) entity;
+            }
+        }
         if (numberOfSameAnimalOnPosition > 1 && numberOfSameAnimalOnPosition < maxNumberOnPosition) {
             changeActionDoneFlag(animal, true);
+            changeActionDoneFlag(partnerAnimal, true);
             Entity newBornAnimal = entitiesProduction.createNewBornAnimal(animal);
             entitiesOnPosition.add(newBornAnimal);
         } else {

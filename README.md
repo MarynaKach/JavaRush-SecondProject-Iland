@@ -8,13 +8,13 @@ Console multithreading application for simulation of wild life on the Island. Th
 length and 20 width.The User may change the size of the Island. The Island is displaced by Entities: Animals and Plant. 
 Animals are able to move, eat, reproduce, die form hunger or to be killed by the predator, grass grows every night. 
 Animal may do only one action during the day. Random choice decides what action Animal will do today. At the end of each
-day the statistic is printed in console. The statistic includes: number of predators, herbivores and grass.
+day the statistic is printed in console. The statistic includes: number of each entity on the Island.
 
 
 Limitations in application
 --------------------------
 
-The game lasts 5 days.
+The game lasts 50 days.
 Minimum width and length of the Island is 3.
 Maximum number of each Entity on each position is defined in game.properties file.
 If Animal didn't eat for 3 days, or it ate twice less kg than the maximum amount for saturation 3 days or during one or 

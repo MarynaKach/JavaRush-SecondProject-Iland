@@ -4,10 +4,7 @@ import com.javarush.main.species.abstractclasses.Animal;
 import com.javarush.main.species.abstractclasses.Entity;
 import com.javarush.main.species.plant.Grass;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Phaser;
 
 public class SupportingMethods {
 
@@ -47,15 +44,5 @@ public class SupportingMethods {
     protected boolean ifEntityPlant(Entity targetEntity) {
         String packageName = targetEntity.getClass().getPackageName();
         return packageName.contains("plant");
-    }
-
-    public List<Runnable> getThreadTaskPerPosition(Phaser phaser, Object[][] islandInstance) {
-        List<Runnable> listOfTasks = new ArrayList<>();
-        for (int row = 0; row < islandInstance.length; row++) {
-            for (int columns = 0; columns < islandInstance[row].length; columns++) {
-                listOfTasks.add(new IslandEntityIterationRunnable(phaser, islandInstance, row, columns));
-            }
-        }
-        return listOfTasks;
     }
 }

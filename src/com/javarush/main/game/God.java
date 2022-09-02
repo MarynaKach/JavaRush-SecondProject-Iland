@@ -1,9 +1,9 @@
 package com.javarush.main.game;
 
 import com.javarush.main.enums.TextMessages;
-import com.javarush.main.services.*;
+import com.javarush.main.services.Statistic;
+import com.javarush.main.services.IslandEntityIteration;
 
-import java.util.List;
 import java.util.concurrent.Phaser;
 
 public class God {
@@ -12,26 +12,34 @@ public class God {
         IslandInitialization islandInitialization = new IslandInitialization();
         DisplacementOfPopulation displacementOfPopulation = new DisplacementOfPopulation();
         Statistic statistic = new Statistic();
-        SupportingMethods supportingMethods = new SupportingMethods();
-        Phaser phaser = new Phaser();
 
         Island island = islandInitialization.createIslandWIthSpecifiedSize();
         Object[][] islandInstance = island.getIslandInstance();
         displacementOfPopulation.setEntitiesOnPosition(islandInstance);
-        statistic.printStatisticOnStart(islandInstance);
+        System.out.println(TextMessages.STATISTIC_ON_BEGINNING_OF_GAME.getMassage());
+        statistic.countStatisticOfDays(islandInstance);
         int gameLength = island.getDaysGameLasts();
         for (int i = 0; i < gameLength; i++) {
-            List<Runnable> listOfTasks = supportingMethods.getThreadTaskPerPosition(phaser, islandInstance);
-            for (int k = 0; k < listOfTasks.size(); k++) {
-                IslandEntityIterationRunnable threadPerPosition = (IslandEntityIterationRunnable) listOfTasks.get(k);
-                try {
-                    threadPerPosition.join();
+            Phaser phaser = new Phaser();
+            Thread thread = null;
+            for (int row = 0; row < islandInstance.length; row++) {
+                for (int columns = 0; columns < islandInstance[row].length; columns++) {
+                    IslandEntityIteration islandEntityIterationRunnable = new IslandEntityIteration(phaser, islandInstance, row, columns);
+                    thread = new Thread(islandEntityIterationRunnable);
+                    thread.start();
+                }
+               try {
+                    thread.join();
                 } catch (InterruptedException e) {
                     System.out.println(TextMessages.FAILURE_TO_JOIN_THREAD);
                     e.printStackTrace();
                 }
             }
-            System.out.printf(TextMessages.STATISTIC_ON_BEGINNING_OF_DAY.getMassage(), i + 1);
+            phaser.arriveAndAwaitAdvance();
+            phaser.arriveAndAwaitAdvance();
+            phaser.arriveAndDeregister();
+
+            System.out.printf(TextMessages.STATISTIC_ON_BEGINNING_OF_DAY.getMassage(), i + 2 );
             statistic.countStatisticOfDays(islandInstance);
         }
     }

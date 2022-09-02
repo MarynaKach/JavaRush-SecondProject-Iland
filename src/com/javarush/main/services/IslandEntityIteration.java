@@ -8,7 +8,7 @@ import com.javarush.main.species.abstractclasses.Entity;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Phaser;
 
-public class IslandEntityIterationRunnable extends Thread implements Runnable {
+public class IslandEntityIteration extends Thread implements Runnable {
     EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
     EatingAction eatingAction = new EatingAction();
     Reproduction reproduction = new Reproduction();
@@ -17,17 +17,16 @@ public class IslandEntityIterationRunnable extends Thread implements Runnable {
     MovingAction movingAction = new MovingAction();
     GrassGrowth grassGrowth = new GrassGrowth();
     Object[][] islandInstance;
-    Phaser phaser;
+   Phaser phaser;
     int row;
     int columns;
 
-    public IslandEntityIterationRunnable(Phaser phaser, Object[][] islandInstance, int row, int columns) {
+    public IslandEntityIteration(Phaser phaser, Object[][] islandInstance, int row, int columns) {
         this.phaser = phaser;
         this.islandInstance = islandInstance;
         this.row = row;
         this.columns = columns;
         phaser.register();
-        new Thread(this).start();
     }
 
     @Override
@@ -41,7 +40,7 @@ public class IslandEntityIterationRunnable extends Thread implements Runnable {
         phaser.arriveAndDeregister();
     }
 
-    public synchronized void islandAnimalIteration(Object[][] islandInstance, int row, int columns) {
+    public void islandAnimalIteration(Object[][] islandInstance, int row, int columns) {
         CopyOnWriteArrayList<Entity> entitiesOnPosition = (CopyOnWriteArrayList<Entity>) islandInstance[row][columns];
         for (int i = 0; i < entitiesOnPosition.size(); i++) {
             Entity entity = entitiesOnPosition.get(i);
