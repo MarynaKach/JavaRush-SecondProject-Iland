@@ -14,7 +14,7 @@ public enum AnimalParametersTypes {
     MIN_LIMIT_LENGTH("minLimitLength"),
     PLANT_GROWTH_RATIO("plantGrowthRatio");
 
-    String name;
+    private String name;
 
     AnimalParametersTypes(String name) {
         this.name = name;

@@ -3,7 +3,7 @@ package com.javarush.main.game;
 import com.javarush.main.services.EntitiesProduction;
 
 public class DisplacementOfPopulation {
-    public EntitiesProduction entitiesProduction = new EntitiesProduction();
+    private EntitiesProduction entitiesProduction = new EntitiesProduction();
 
     public void setEntitiesOnPosition(Object[][] islandInstance) {
         for (int row = 0; row < islandInstance.length; row++) {

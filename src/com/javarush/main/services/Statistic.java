@@ -21,12 +21,12 @@ public class Statistic {
 
     private void countNumberOfEachAnimal(List<List<Entity>> entitiesOnPositions) {
         int numberOfAnimal = 0;
-        for(AnimalEnum animal : AnimalEnum.values()) {
+        for (AnimalEnum animal : AnimalEnum.values()) {
             for (List list : entitiesOnPositions) {
-            long numberOfAnimalOnCurrentPosition = list.stream()
+                long numberOfAnimalOnCurrentPosition = list.stream()
                         .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(animal.getName()))
                         .count();
-            numberOfAnimal = (int) (numberOfAnimal + numberOfAnimalOnCurrentPosition);
+                numberOfAnimal = (int) (numberOfAnimal + numberOfAnimalOnCurrentPosition);
             }
             System.out.println(animal.getName() + " = " + numberOfAnimal);
             numberOfAnimal = 0;

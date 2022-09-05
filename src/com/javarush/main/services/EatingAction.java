@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EatingAction {
-    SupportingMethods supportingMethods = new SupportingMethods();
+    private SupportingMethods supportingMethods = new SupportingMethods();
 
     protected void eat(CopyOnWriteArrayList<Entity> entitiesOnPosition, Animal animal) {
         HashMap<String, Integer> eatingRationMap = animal.getEatingRatio();
@@ -36,8 +36,6 @@ public class EatingAction {
         checkIfAnimalEatEnough(entitiesOnPosition, targetEntity, numberOfTargetAnimalToEat,animal);
         animal.setActionDone(true);
     }
-
-
 
     private String findFoodRandomly(HashMap<String, Integer> eatingRationMap) {
         Set<String> entityEatable = eatingRationMap.keySet();

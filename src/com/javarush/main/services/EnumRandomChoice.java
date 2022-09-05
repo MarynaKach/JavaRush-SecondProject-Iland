@@ -8,6 +8,5 @@ public class EnumRandomChoice {
         Random random = new Random();
         int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
-
     }
 }

@@ -10,25 +10,25 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GrassGrowth {
 
     public void letPlantGrowAtNight(Object[][] islandInstance, String plantName, int row, int columns) {
-                CopyOnWriteArrayList<Entity> newGrassList = new CopyOnWriteArrayList<>();
-                CopyOnWriteArrayList<Entity> entitiesOnPosition = (CopyOnWriteArrayList<Entity>) islandInstance[row][columns];
-                long numberOfGrassAtEndOFDay = entitiesOnPosition.stream()
-                        .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(plantName))
-                        .count();
-                if (numberOfGrassAtEndOFDay == 0) {
-                    newGrassList = setGrassOnPosition();
-                    entitiesOnPosition.addAll(newGrassList);
-                }
-                if (numberOfGrassAtEndOFDay > 0) {
-                    IslandInitialization islandInitialization = new IslandInitialization();
-                    double plantGrowthRation = islandInitialization.getPlantGrowthRatio();
-                    int grassIncreasingRatio = (int) Math.ceil(numberOfGrassAtEndOFDay * plantGrowthRation);
-                    for (int i = 0; i < grassIncreasingRatio; i++) {
-                        newGrassList.add(createGrass());
-                    }
-                    entitiesOnPosition.addAll(newGrassList);
-                }
-                newGrassList.clear();
+        CopyOnWriteArrayList<Entity> newGrassList = new CopyOnWriteArrayList<>();
+        CopyOnWriteArrayList<Entity> entitiesOnPosition = (CopyOnWriteArrayList<Entity>) islandInstance[row][columns];
+        long numberOfGrassAtEndOFDay = entitiesOnPosition.stream()
+                .filter(x -> x.getClass().getSimpleName().equalsIgnoreCase(plantName))
+                .count();
+        if (numberOfGrassAtEndOFDay == 0) {
+            newGrassList = setGrassOnPosition();
+            entitiesOnPosition.addAll(newGrassList);
+        }
+        if (numberOfGrassAtEndOFDay > 0) {
+            IslandInitialization islandInitialization = new IslandInitialization();
+            double plantGrowthRation = islandInitialization.getPlantGrowthRatio();
+            int grassIncreasingRatio = (int) Math.ceil(numberOfGrassAtEndOFDay * plantGrowthRation);
+            for (int i = 0; i < grassIncreasingRatio; i++) {
+                newGrassList.add(createGrass());
+            }
+            entitiesOnPosition.addAll(newGrassList);
+        }
+        newGrassList.clear();
     }
 
     protected CopyOnWriteArrayList<Entity> setGrassOnPosition() {

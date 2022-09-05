@@ -38,7 +38,7 @@ public class SupportingMethods {
 
     protected boolean ifEntityAnimal(Entity targetEntity) {
         String packageName = targetEntity.getClass().getPackageName();
-        return !(packageName.contains("plant"));
+        return !(packageName.contains("plant")) && targetEntity != null;
     }
 
     protected boolean ifEntityPlant(Entity targetEntity) {

@@ -5,9 +5,9 @@ import com.javarush.main.enums.TextMessages;
 import com.javarush.main.services.PropertiesLoader;
 
 public class ConsoleDialogue {
-    int defaultIslandWidth = Integer.parseInt(PropertiesLoader
+    private int defaultIslandWidth = Integer.parseInt(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.WIDTH.getName()));
-    int defaultIslandLength = Integer.parseInt(PropertiesLoader
+    private int defaultIslandLength = Integer.parseInt(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.LENGTH.getName()));
 
     public boolean startDialogue() {

@@ -7,7 +7,7 @@ public abstract class Animal extends Entity {
     private int maxNumberOnPosition;
     private int maxTravelSpeed;
     private double kgForFullSaturation;
-    boolean isActionDone;
+    private boolean isActionDone;
     private HashMap<String, Integer> eatingRation;
     private int saturationRatio;
 

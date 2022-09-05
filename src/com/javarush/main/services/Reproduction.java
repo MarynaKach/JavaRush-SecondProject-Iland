@@ -6,14 +6,14 @@ import com.javarush.main.species.abstractclasses.Entity;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Reproduction {
-    EntitiesProduction entitiesProduction = new EntitiesProduction();
+    private EntitiesProduction entitiesProduction = new EntitiesProduction();
 
     public void reproduce(CopyOnWriteArrayList<Entity> entitiesOnPosition, Animal animal) {
         int maxNumberOnPosition = animal.getMaxNumberOnPosition();
         int numberOfSameAnimalOnPosition = countNumberOfSameEntityOnPosition(entitiesOnPosition, animal);
         Animal partnerAnimal = null;
         for (Entity entity : entitiesOnPosition) {
-            if(entity.getClass().getSimpleName().equalsIgnoreCase(animal.getClass().getSimpleName())){
+            if (entity.getClass().getSimpleName().equalsIgnoreCase(animal.getClass().getSimpleName())) {
                 partnerAnimal = (Animal) entity;
             }
         }

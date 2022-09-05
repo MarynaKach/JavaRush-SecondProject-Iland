@@ -8,9 +8,9 @@ import com.javarush.main.species.abstractclasses.Entity;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MovingAction {
-    DirectionsOfMoving directionsOfMoving;
-    SupportingMethods supportingMethods = new SupportingMethods();
-    EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
+    private DirectionsOfMoving directionsOfMoving;
+    private SupportingMethods supportingMethods = new SupportingMethods();
+    private EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
 
     public void makeMove(Object[][] islandInstance, CopyOnWriteArrayList<Entity> entitiesOnPosition, Animal animal, int row, int columns) {
         directionsOfMoving = chooseDirection();
@@ -53,28 +53,27 @@ public class MovingAction {
 
     private void moveWestEast(Object[][] islandInstance, CopyOnWriteArrayList<Entity> entitiesOnPosition, Animal animal, int travelSpeed, int row, int columns) {
         int outOfBoundArray = columns + travelSpeed;
-        if (outOfBoundArray <= 0 || outOfBoundArray >= islandInstance[columns].length) {
+        boolean ifCanNotMove = checkPossibilityToMove(islandInstance, outOfBoundArray, columns);
+        if (ifCanNotMove) {
             supportingMethods.changeActionDoneFlag(animal, true);
-            return;
+        } else {
+            CopyOnWriteArrayList<Entity> targetList = (CopyOnWriteArrayList<Entity>) islandInstance[row][columns + travelSpeed];
+            animalMovement(entitiesOnPosition, targetList, animal);
         }
-        CopyOnWriteArrayList<Entity> targetList = (CopyOnWriteArrayList<Entity>) islandInstance[row][columns + travelSpeed];
-        int maxNumberOnPosition = supportingMethods.maxNumberOnPosition(animal);
-        int countOfSameAnimals = supportingMethods.countNumberOfSameEntityOnPosition(targetList, animal);
-        if (countOfSameAnimals < maxNumberOnPosition) {
-            entitiesOnPosition.remove(animal);
-            supportingMethods.changeActionDoneFlag(animal, true);
-            targetList.add(animal);
-        }
-
     }
 
     private void moveNorthSouth(Object[][] islandInstance, CopyOnWriteArrayList<Entity> entitiesOnPosition, Animal animal, int travelSpeed, int row, int columns) {
         int outOfBoundArray = row + travelSpeed;
-        if (outOfBoundArray <= 0 || outOfBoundArray >= islandInstance[row].length) {
+        boolean ifCanNotMove = checkPossibilityToMove(islandInstance, outOfBoundArray, row);
+        if (ifCanNotMove) {
             supportingMethods.changeActionDoneFlag(animal, true);
-            return;
+        } else {
+            CopyOnWriteArrayList<Entity> targetList = (CopyOnWriteArrayList<Entity>) islandInstance[row + travelSpeed][columns];
+            animalMovement(entitiesOnPosition, targetList, animal);
         }
-        CopyOnWriteArrayList<Entity> targetList = (CopyOnWriteArrayList<Entity>) islandInstance[row + travelSpeed][columns];
+    }
+
+    private void animalMovement(CopyOnWriteArrayList<Entity> entitiesOnPosition, CopyOnWriteArrayList<Entity> targetList, Animal animal) {
         int maxNumberOnPosition = animal.getMaxNumberOnPosition();
         int countOfSameAnimals = supportingMethods.countNumberOfSameEntityOnPosition(targetList, animal);
         if (countOfSameAnimals < maxNumberOnPosition) {
@@ -82,5 +81,9 @@ public class MovingAction {
             supportingMethods.changeActionDoneFlag(animal, true);
             targetList.add(animal);
         }
+    }
+
+    private boolean checkPossibilityToMove(Object[][] islandInstance, int outOfBoundArray, int rowOrColumns) {
+        return outOfBoundArray <= 0 || outOfBoundArray >= islandInstance[rowOrColumns].length;
     }
 }

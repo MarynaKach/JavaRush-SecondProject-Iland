@@ -11,18 +11,18 @@ import java.util.regex.Pattern;
 
 public class IslandInitialization {
     private Island island;
-    int minLimitWidth = Integer.parseInt(PropertiesLoader
+    private int minLimitWidth = Integer.parseInt(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_WIDTH.getName()));
-    int minLimitLength = Integer.parseInt(PropertiesLoader
+    private int minLimitLength = Integer.parseInt(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.MIN_LIMIT_LENGTH.getName()));
-    int newIslandLandWidth = 0;
-    int newIslandLandLength = 0;
-    int defaultIslandWidth = Integer.parseInt(PropertiesLoader
+    private int newIslandLandWidth = 0;
+    private int newIslandLandLength = 0;
+    private int defaultIslandWidth = Integer.parseInt(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.WIDTH.getName()));
-    int defaultIslandLength = Integer.parseInt(PropertiesLoader
+    private int defaultIslandLength = Integer.parseInt(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.LENGTH.getName()));
 
-    double plantGrowthRatio = Double.parseDouble(PropertiesLoader
+    private double plantGrowthRatio = Double.parseDouble(PropertiesLoader
             .properties.getProperty("Island_" + AnimalParametersTypes.PLANT_GROWTH_RATIO.getName()));
 
     public int getDefaultIslandWidth() {
@@ -45,7 +45,7 @@ public class IslandInitialization {
         return plantGrowthRatio;
     }
 
-    protected Island createIslandWIthSpecifiedSize () {
+    protected Island createIslandWIthSpecifiedSize() {
         ConsoleDialogue consoleDialogue = new ConsoleDialogue();
         boolean ifChangeIslandSize = consoleDialogue.startDialogue();
         IslandInitialization islandInitialization = new IslandInitialization();
@@ -60,7 +60,7 @@ public class IslandInitialization {
             island = islandInitialization
                     .createIsland(defaultIslandWidth, defaultIslandLength);
         }
-    return island;
+        return island;
     }
 
     protected Island createIsland(int width, int length) {
@@ -84,7 +84,8 @@ public class IslandInitialization {
     private int typeNewIslandSize(TextMessages textMassages, int lowLimitSize) {
         System.out.printf(textMassages.getMassage(), lowLimitSize);
         String newSize = ScannerSingleton.getInstance().nextLine();
-        while (!Pattern.matches("[0-9]+", newSize) || Integer.parseInt(newSize) < lowLimitSize) {
+        String regex = "[0-9]";
+        while (!Pattern.matches(regex, newSize) || Integer.parseInt(newSize) < lowLimitSize) {
             System.out.printf(textMassages.getMassage(), lowLimitSize);
             newSize = ScannerSingleton.getInstance().nextLine();
         }

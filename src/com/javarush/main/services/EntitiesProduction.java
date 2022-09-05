@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EntitiesProduction {
-    GrassGrowth grassGrowth = new GrassGrowth();
+    private GrassGrowth grassGrowth = new GrassGrowth();
 
     public CopyOnWriteArrayList<Entity> createListOfEntitiesOnPosition() {
         CopyOnWriteArrayList<Entity> entitiesOnPosition = new CopyOnWriteArrayList<>();

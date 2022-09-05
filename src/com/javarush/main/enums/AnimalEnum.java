@@ -26,9 +26,8 @@ public enum AnimalEnum {
     WOLF("Wolf", Wolf.class),
     GRASS("Grass", Grass.class);
 
-    String name;
-    Class clazz;
-    String emoji ;
+    private String name;
+    private Class clazz;
 
     AnimalEnum(String name, Class clazz) {
         this.name = name;

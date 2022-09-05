@@ -28,7 +28,7 @@ public class God {
                     thread = new Thread(islandEntityIterationRunnable);
                     thread.start();
                 }
-               try {
+                try {
                     thread.join();
                 } catch (InterruptedException e) {
                     System.out.println(TextMessages.FAILURE_TO_JOIN_THREAD);
@@ -38,8 +38,7 @@ public class God {
             phaser.arriveAndAwaitAdvance();
             phaser.arriveAndAwaitAdvance();
             phaser.arriveAndDeregister();
-
-            System.out.printf(TextMessages.STATISTIC_ON_BEGINNING_OF_DAY.getMassage(), i + 2 );
+            System.out.printf(TextMessages.STATISTIC_ON_BEGINNING_OF_DAY.getMassage(), i + 2);
             statistic.countStatisticOfDays(islandInstance);
         }
     }

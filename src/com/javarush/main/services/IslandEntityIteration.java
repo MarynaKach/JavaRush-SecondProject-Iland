@@ -9,17 +9,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Phaser;
 
 public class IslandEntityIteration extends Thread implements Runnable {
-    EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
-    EatingAction eatingAction = new EatingAction();
-    Reproduction reproduction = new Reproduction();
-    SupportingMethods supportingMethods = new SupportingMethods();
-    Actions actions;
-    MovingAction movingAction = new MovingAction();
-    GrassGrowth grassGrowth = new GrassGrowth();
-    Object[][] islandInstance;
-   Phaser phaser;
-    int row;
-    int columns;
+    private EnumRandomChoice enumRandomChoice = new EnumRandomChoice();
+    private EatingAction eatingAction = new EatingAction();
+    private Reproduction reproduction = new Reproduction();
+    private SupportingMethods supportingMethods = new SupportingMethods();
+    private Actions actions;
+    private MovingAction movingAction = new MovingAction();
+    private GrassGrowth grassGrowth = new GrassGrowth();
+    private Object[][] islandInstance;
+    private Phaser phaser;
+    private int row;
+    private int columns;
 
     public IslandEntityIteration(Phaser phaser, Object[][] islandInstance, int row, int columns) {
         this.phaser = phaser;
@@ -44,8 +44,7 @@ public class IslandEntityIteration extends Thread implements Runnable {
         CopyOnWriteArrayList<Entity> entitiesOnPosition = (CopyOnWriteArrayList<Entity>) islandInstance[row][columns];
         for (int i = 0; i < entitiesOnPosition.size(); i++) {
             Entity entity = entitiesOnPosition.get(i);
-            String packageName = entity.getClass().getPackageName();
-            if (!(packageName.contains("plant")) && entity != null) {
+            if (supportingMethods.ifEntityAnimal(entity)) {
                 Animal animal = (Animal) entity;
                 boolean isActionDone = animal.isActionDone();
                 if (!isActionDone) {
